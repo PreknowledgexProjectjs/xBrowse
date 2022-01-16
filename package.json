@@ -1,0 +1,63 @@
+{
+  "name": "pxqbrowse-ejs",
+  "productName": "XBrowse ejs",
+  "version": "0.0.1",
+  "description": "new",
+  "keywords": [
+    "electron",
+    "browser",
+    "navigation",
+    "tab",
+    "addressbar"
+  ],
+  "main": "main/main.js",
+  "author": "pxproj",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/"
+  },
+  "scripts": {
+    "start:control": "npx babel src --out-dir main/renderer",
+    "start": "electron main/main.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "px.xbrowse",
+    "mac": {
+      "category": "your.app.category.type",
+      "icon": "icons/icon.icns"
+    },
+    "win": {
+      "asar": true,
+      "target": "nsis",
+      "icon": "icons/icon.ico"
+    },
+    "linux": {
+      "target": "deb",
+      "maintainer": "pxlinux",
+      "icon": "icons/icon.ico"
+    }
+  },
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "cli-color": "^2.0.1",
+    "data-store": "^4.0.3",
+    "electron-log": "^3.0.7",
+    "file-url": "^2.0.2",
+    "nodescriptencryption": "^1.0.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-loading-icons": "^1.0.8",
+    "socket.io": "^4.4.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.8",
+    "@babel/preset-react": "^7.16.7",
+    "electron": "^16.0.7",
+    "electron-builder": "^22.14.5"
+  }
+}
