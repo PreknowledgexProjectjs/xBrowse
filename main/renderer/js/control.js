@@ -101,8 +101,23 @@ function Control() {
   const validUrl = require('../../prod_lib/isUrl.js');
 
   const {
-    ipcRenderer
+    ipcRenderer,
+    app
   } = require('electron');
+
+  const jsonDataSetup = require("../../dataSetup.json");
+
+  const settings_data = require('data-store')({
+    path: jsonDataSetup.userData + '/settings.json'
+  });
+
+  const search_engines = require('data-store')({
+    path: jsonDataSetup.userData + '/search_engines.json'
+  });
+
+  if (settings_data.get('default_search') == undefined) {
+    settings_data.set('default_search', 'google');
+  }
 
   const {
     url,
@@ -131,7 +146,7 @@ function Control() {
       if (validUrl.isUri(v)) {
         href = `http://${v}`;
       } else {
-        href = `https://www.google.com/search?q=${v}`;
+        href = `${search_engines.get(settings_data.get('default_search'))}${v}`;
       }
     }
 
@@ -214,10 +229,7 @@ function Control() {
     placeholder: "Search or Type a URL"
   }), /*#__PURE__*/_react.default.createElement("div", {
     className: "actions"
-  }, /*#__PURE__*/_react.default.createElement("div", {
-    className: "settings",
-    onClick: settings
-  }, /*#__PURE__*/_react.default.createElement(IconLeft, null))))));
+  }))));
 } // eslint-disable-next-line no-undef
 
 

@@ -3,10 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title>PxBrowse</title>
-  <link rel="stylesheet" href="./style.css" media="all">
+  <link rel="stylesheet" href="./css/style.css" media="all">
+  <link rel="stylesheet" type="text/css" href="css/toastify.css">
 </head>
 <body>
   <div id="app" />
-  <script src="./control.js"></script>
+  <script src="./js/control.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script type="text/javascript" src="./js/toastify.js"></script>
+  <script src="./js/socket.io.js"></script>
+  <script type="text/javascript">
+    var socket = io.connect('http://localhost:36214',{secure: true,rejectUnauthorized: false});
+    socket.on('connect',function(){
+      socket.on('toastR', function(msg) {
+        //toastr.success(msg)
+        alert(msg);
+      });
+    });
+
+  </script>
 </body>
 </html>

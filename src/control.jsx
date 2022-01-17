@@ -93,7 +93,17 @@ const IconRight = () => (
 function Control() {
   const { tabs, tabIDs, activeID } = useConnect();
   const validUrl = require('../../prod_lib/isUrl.js');
-  const { ipcRenderer } = require('electron')
+  const { ipcRenderer , app } = require('electron')
+
+  const jsonDataSetup = require("../../dataSetup.json");
+
+  const settings_data = require('data-store')({ path: jsonDataSetup.userData + '/settings.json' });
+  const search_engines = require('data-store')({ path: jsonDataSetup.userData + '/search_engines.json' });
+
+  if(settings_data.get('default_search') == undefined){
+    settings_data.set('default_search','google');
+  }
+
   const { url, canGoForward, canGoBack, isLoading } = tabs[activeID] || {};
   const settings = () => {
     ipcRenderer.send('open-settings', 'yes')
@@ -113,7 +123,7 @@ function Control() {
       if(validUrl.isUri(v)){
         href = `http://${v}`;
       }else{
-        href = `https://www.google.com/search?q=${v}`;
+        href = `${search_engines.get(settings_data.get('default_search'))}${v}`;
       }
     }
     action.sendEnterURL(href);
@@ -192,6 +202,7 @@ function Control() {
             </div>*/}
           </div>
         </div>
+        
       </div>
     </div>
   );

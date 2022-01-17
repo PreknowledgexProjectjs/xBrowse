@@ -18,7 +18,7 @@
     "url": "https://github.com/"
   },
   "scripts": {
-    "start:control": "npx babel src --out-dir main/renderer",
+    "start:control": "npx babel src --out-dir main/renderer/js",
     "start": "electron main/main.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
@@ -46,11 +46,13 @@
     "data-store": "^4.0.3",
     "electron-log": "^3.0.7",
     "file-url": "^2.0.2",
+    "jquery": "^3.6.0",
     "nodescriptencryption": "^1.0.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-loading-icons": "^1.0.8",
-    "socket.io": "^4.4.1"
+    "socket.io": "^4.4.1",
+    "toastr": "^2.1.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",

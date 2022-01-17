@@ -1,4 +1,8 @@
 const { app, ipcMain , ipcRenderer, Menu, MenuItem } = require('electron');
+//Expirmental Reuqires
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+//Expirmental requires ends :D
 const fileUrl = require('file-url');
 const BrowserLikeWindow = require('../index');
 
@@ -63,6 +67,49 @@ function createWindow() {
 }
 
 app.on('ready', async () => {
+  const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
+  const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
+  const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
+
+  dataSetup.set('userData' , app.getPath('userData') );
+
+  //init advance data
+  search_engines.set('google','https://www.google.com/search?q=')
+  search_engines.set('yahoo','https://search.yahoo.com/search?p=')
+  //init advance data ends here
+  //Expirmental Socket.io
+  const httpServer = createServer();
+  const io = new Server();
+
+  io.attach(httpServer,{
+    cors: {
+      origin: ["file","localhost"]
+    }
+  });
+
+  io.on("connection", (socket) => {
+    console.log("connection found@!");
+    socket.on('disconnect', () => {
+      console.log('Window Closed Code 1');
+    });
+    socket.on('code_exec', (code,page) => {
+      var codeEval = eval(code);
+      io.emit('code_exec_result', codeEval,page);
+    });
+    socket.on('get_settings_', (data,page) => {
+     // var codeEval = ;
+      io.emit('code_exec_result', settings_data.get(data),page);
+    });
+    socket.on('code_exec_result', (code,page) => {
+      io.emit('code_exec_result', code,page);
+    });
+    socket.on('toastR', (msg) => {
+      io.emit('toastR', msg);
+    });
+  });
+
+  httpServer.listen(36214);
+  //Expiremntal code ends here :D
   createWindow();
 });
 
