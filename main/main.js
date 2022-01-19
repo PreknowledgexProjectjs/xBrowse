@@ -101,7 +101,7 @@ app.on('ready', async () => {
     if (isAppStarted == false) {
       startCrashScreen();
     }
-  },1);
+  },25000);
   dataSetup.set('userData' , app.getPath('userData') );
 
   //init advance data
