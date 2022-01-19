@@ -37,8 +37,31 @@ jobs:
         
 
 
-      - name: Application Build
-        run: yarn dist
+      - name: Application Build on Windows
+        if: matrix.os == 'windows-latest'
+        run: yarn dist --win nsis:x64
+        env:
+          GH_TOKEN: ${{ secrets.token }}
+
+          MAC_CERTS: ${{ secrets.mac_certs }}
+          MAC_CERTS_PASSWORD: ${{ secrets.mac_certs_password }}
+
+          RELEASE: ${{ contains(steps.log.outputs.message, 'bump version') }}
+
+      - name: Application Build on Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: yarn dist --linux
+        env:
+          GH_TOKEN: ${{ secrets.token }}
+
+          MAC_CERTS: ${{ secrets.mac_certs }}
+          MAC_CERTS_PASSWORD: ${{ secrets.mac_certs_password }}
+
+          RELEASE: ${{ contains(steps.log.outputs.message, 'bump version') }}
+
+      - name: Application Build on macOS
+        if: matrix.os == 'macos-latest'
+        run: yarn dist --mac dmg:universal
         env:
           GH_TOKEN: ${{ secrets.token }}
 
