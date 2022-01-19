@@ -1,4 +1,5 @@
 const { BrowserWindow, BrowserView, ipcMain } = require('electron');
+const windowStateKeeper = require('electron-window-state');
 const EventEmitter = require('events');
 const log = require('electron-log');
 
@@ -53,6 +54,8 @@ class BrowserLikeWindow extends EventEmitter {
   constructor(options) {
     super();
 
+    this.dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
+
     this.options = options;
     const {
       width = 1024,
@@ -62,13 +65,22 @@ class BrowserLikeWindow extends EventEmitter {
       controlReferences
     } = options;
 
+    let mainWindowState = windowStateKeeper({
+      defaultWidth: width,
+      defaultHeight: height
+    });
+
     this.win = new BrowserWindow({
       ...winOptions,
-      width,
-      height,
+      'x': mainWindowState.x,
+      'y': mainWindowState.y,
+      'width': mainWindowState.width,
+      'height': mainWindowState.height,
       icon:'icons/icon.ico',
       title:"xBrowse ejs",
     });
+
+    mainWindowState.manage(this.win);
 
     this.defCurrentViewId = null;
     this.defTabConfigs = {};
@@ -97,6 +109,7 @@ class BrowserLikeWindow extends EventEmitter {
     ipcMain.on('set-browseview', (event, url) => {
       this.controlView.webContents.loadURL(url);
     })
+    
     const webContentsAct = actionName => {
       const webContents = this.currentWebContents;
       const action = webContents && webContents[actionName];
@@ -222,10 +235,12 @@ class BrowserLikeWindow extends EventEmitter {
     const controlBounds = this.getControlBounds();
     if (this.currentView) {
       this.currentView.setBounds({
+      //  x: 25,
         x: 0,
-        y: controlBounds.y + controlBounds.height,
+        y: controlBounds.y + controlBounds.height + 10,
+        z: 25,
         width: contentWidth,
-        height: contentHeight - controlBounds.height
+        height: contentHeight - controlBounds.height - 40
       });
     }
   }
@@ -331,6 +346,11 @@ class BrowserLikeWindow extends EventEmitter {
         log.debug('did-start-loading > set loading');
         this.setTabConfig(id, { isLoading: true });
       })
+      .on('did-fail-load', (errorDescription) => {
+        log.debug('did-fail-loading > '+ errorDescription );
+        webContents.loadURL(fileUrl(`${__dirname}/main/renderer/crashFailure.html`));
+        this.setTabConfig(id, { isLoading: false });
+      })
       .on('did-start-navigation', (e, href, isInPlace, isMainFrame) => {
         if (isMainFrame) {
           const fileUrl = require('file-url');
@@ -348,6 +368,10 @@ class BrowserLikeWindow extends EventEmitter {
 
           if(href.includes(fileUrl(`${__dirname}/main/renderer/help.html`))){
             href = "px://help";
+          }
+
+          if(href.includes(fileUrl(`${__dirname}/main/renderer/crashFailure.html`))){
+            href = "px://crash";
           }
 
           if(href.includes(fileUrl(`${__dirname}/main/renderer/credits.html`))){

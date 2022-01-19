@@ -1,26 +1,36 @@
-const { app, ipcMain , ipcRenderer, Menu, MenuItem } = require('electron');
+const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow  } = require('electron');
 //Expirmental Reuqires
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 //Expirmental requires ends :D
 const fileUrl = require('file-url');
 const BrowserLikeWindow = require('../index');
+const isDev = require('electron-is-dev');
 
 let browser;
 
+app.commandLine.appendSwitch('--enable-transparent-visuals')
+
 function createWindow() {
+  var isdebug = true;
+  if (isDev) {
+    isdebug = true;
+  }else {
+    isdebug = false;
+  }
   browser = new BrowserLikeWindow({
     controlHeight: 99,
     controlPanel: fileUrl(`${__dirname}/renderer/control.html`),
     startPage: fileUrl(`${__dirname}/renderer/new-tab.html`),
     blankTitle: 'New tab',
     blankPage: fileUrl(`${__dirname}/renderer/new-tab.html`),
-    debug: true // will open controlPanel's devtools
+    debug: isdebug // will open controlPanel's devtools
   });
 
   browser.on('closed', () => {
     browser = null;
   });
+
 
   var menu = new Menu();
 
@@ -66,11 +76,32 @@ function createWindow() {
   })
 }
 
+
+function startCrashScreen(){
+  const win = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: true })
+  win.loadURL(fileUrl(`${__dirname}/renderer/crashFailure.html`))
+  if (isDev) {
+    win.webContents.openDevTools({ mode:"detach" });
+  }
+  win.show();
+  setTimeout(function(){
+    win.hide();
+  },55000);
+  win.setAlwaysOnTop(true, 'screen');
+  win.setMinimizable(false);
+}
+
+var isAppStarted = false;
+
 app.on('ready', async () => {
   const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
   const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
   const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
-
+  setTimeout(function(){
+    if (isAppStarted == false) {
+      startCrashScreen();
+    }
+  },1);
   dataSetup.set('userData' , app.getPath('userData') );
 
   //init advance data
@@ -88,6 +119,7 @@ app.on('ready', async () => {
   });
 
   io.on("connection", (socket) => {
+    isAppStarted = true;
     console.log("connection found@!");
     socket.on('disconnect', () => {
       console.log('Window Closed Code 1');

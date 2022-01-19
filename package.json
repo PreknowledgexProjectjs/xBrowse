@@ -1,9 +1,9 @@
 {
   "name": "pxqbrowse-ejs",
   "productName": "XBrowse ejs",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "description": "new",
-  "homepage":"https://the-px-proj.ml",
+  "homepage": "https://the-px-proj.ml",
   "keywords": [
     "electron",
     "browser",
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start:control": "npx babel src --out-dir main/renderer/js",
-    "start": "electron main/main.js",
+    "start": "electron main/main.js --enable-transparent-visuals",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
@@ -45,7 +45,9 @@
     "classnames": "^2.2.6",
     "cli-color": "^2.0.1",
     "data-store": "^4.0.3",
+    "electron-is-dev": "^2.0.0",
     "electron-log": "^3.0.7",
+    "electron-window-state": "^5.0.3",
     "file-url": "^2.0.2",
     "jquery": "^3.6.0",
     "nodescriptencryption": "^1.0.4",

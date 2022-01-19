@@ -105,7 +105,7 @@ function Control() {
     app
   } = require('electron');
 
-  const jsonDataSetup = require("../../dataSetup.json");
+  const jsonDataSetup = require(`${process.cwd()}/dataSetup.json`);
 
   const settings_data = require('data-store')({
     path: jsonDataSetup.userData + '/settings.json'
@@ -166,7 +166,7 @@ function Control() {
     action.sendSwitchTab(id);
   };
 
-  return /*#__PURE__*/_react.default.createElement("div", {
+  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", {
     className: "container"
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "tabs"
@@ -223,13 +223,14 @@ function Control() {
     onClick: isLoading ? action.sendStop : action.sendReload
   }, isLoading ? /*#__PURE__*/_react.default.createElement(IconClose, null) : /*#__PURE__*/_react.default.createElement(IconReload, null))), /*#__PURE__*/_react.default.createElement("input", {
     className: "address",
+    id: "address",
     value: url || '',
     onChange: onUrlChange,
     onKeyDown: onPressEnter,
     placeholder: "Search or Type a URL"
   }), /*#__PURE__*/_react.default.createElement("div", {
     className: "actions"
-  }))));
+  })))));
 } // eslint-disable-next-line no-undef
 
 

@@ -95,7 +95,7 @@ function Control() {
   const validUrl = require('../../prod_lib/isUrl.js');
   const { ipcRenderer , app } = require('electron')
 
-  const jsonDataSetup = require("../../dataSetup.json");
+  const jsonDataSetup = require(`${process.cwd()}/dataSetup.json`);
 
   const settings_data = require('data-store')({ path: jsonDataSetup.userData + '/settings.json' });
   const search_engines = require('data-store')({ path: jsonDataSetup.userData + '/search_engines.json' });
@@ -140,70 +140,76 @@ function Control() {
   };
 
   return (
-    <div className="container">
-      <div  className="tabs">
-        <>
-          {tabIDs.map(id => {
-            // eslint-disable-next-line no-shadow
-            const { title, isLoading, favicon } = tabs[id] || {};
-            return (
-              <div
-                key={id}
-                className={cx('tab', { active: id === activeID })}
-                onClick={() => switchTab(id)}
-              >
-                {isLoading ? <IconLoading /> : !!favicon && <img src={favicon} width="16" alt="" />}
-                <div className="title">
-                  <div className="title-content">{title}</div>
+    <div>
+      <div className="container">
+        <div  className="tabs">
+          <>
+            {tabIDs.map(id => {
+              // eslint-disable-next-line no-shadow
+              const { title, isLoading, favicon } = tabs[id] || {};
+              return (
+                <div
+                  key={id}
+                  className={cx('tab', { active: id === activeID })}
+                  onClick={() => switchTab(id)}
+                >
+                  {isLoading ? <IconLoading /> : !!favicon && <img src={favicon} width="16" alt="" />}
+                  <div className="title">
+                    <div className="title-content">{title}</div>
+                  </div>
+                  <div className="close" onClick={e => close(e, id)}>
+                    <IconClose />
+                  </div>
                 </div>
-                <div className="close" onClick={e => close(e, id)}>
-                  <IconClose />
-                </div>
-              </div>
-            );
-          })}
-          <span type="plus" className="plusic" style={{ marginLeft: 10 }} onClick={newTab}>
-            <IconPlus />
-          </span>
-        </>
-      </div>
-      <div className="bars">
-        <div className="bar address-bar">
-          <div className="actions">
-            <div
-              className={cx('action', { disabled: !canGoBack })}
-              onClick={canGoBack ? action.sendGoBack : undefined}
-            >
-              <IconLeft />
-            </div>
-            <div
-              className={cx('action', { disabled: !canGoForward })}
-              onClick={canGoForward ? action.sendGoForward : undefined}
-            >
-              <IconRight />
-            </div>
-            <div className={cx('action')} onClick={isLoading ? action.sendStop : action.sendReload}>
-              {isLoading ? <IconClose /> : <IconReload />}
-            </div>
-          </div>
-          <input
-            className="address"
-            value={url || ''}
-            onChange={onUrlChange}
-            onKeyDown={onPressEnter}
-            placeholder="Search or Type a URL"
-          />
-           <div className="actions">
-            {/*<div
-              className={"settings"}
-              onClick={settings}
-            >
-              <IconLeft />
-            </div>*/}
-          </div>
+              );
+            })}
+            <span type="plus" className="plusic" style={{ marginLeft: 10 }} onClick={newTab}>
+              <IconPlus />
+            </span>
+          </>
         </div>
-        
+        <div className="bars">
+          <div className="bar address-bar">
+            <div className="actions">
+              <div
+                className={cx('action', { disabled: !canGoBack })}
+                onClick={canGoBack ? action.sendGoBack : undefined}
+              >
+                <IconLeft />
+              </div>
+              <div
+                className={cx('action', { disabled: !canGoForward })}
+                onClick={canGoForward ? action.sendGoForward : undefined}
+              >
+                <IconRight />
+              </div>
+              <div className={cx('action')} onClick={isLoading ? action.sendStop : action.sendReload}>
+                {isLoading ? <IconClose /> : <IconReload />}
+              </div>
+            </div>
+            {/*<div className="autocomplete">*/}
+              <input
+                className="address"
+                id="address"
+                value={url || ''}
+                onChange={onUrlChange}
+                onKeyDown={onPressEnter}
+                placeholder="Search or Type a URL"
+              />
+            {/*</div>*/}
+             <div className="actions">
+              {/*<div
+                className={"settings"}
+                onClick={settings}
+              >
+                <IconLeft />
+              </div>*/}
+            </div>
+          </div>
+
+        </div>
       </div>
+      
     </div>
   );
 }
