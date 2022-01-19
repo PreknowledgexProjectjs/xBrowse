@@ -37,7 +37,6 @@
     },
     "linux": {
       "target": "appimage",
-      "maintainer": "pxlinux",
       "icon": "icons/icon.ico"
     }
   },
