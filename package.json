@@ -28,7 +28,8 @@
     "appId": "px.xbrowse",
     "mac": {
       "category": "your.app.category.type",
-      "icon": "icons/icon.icns"
+      "icon": "icons/icon.icns",
+      "arch": "universal"
     },
     "win": {
       "asar": true,
