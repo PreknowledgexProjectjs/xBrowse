@@ -9,7 +9,8 @@ const isDev = require('electron-is-dev');
 
 let browser;
 
-app.commandLine.appendSwitch('--enable-transparent-visuals')
+app.commandLine.appendSwitch('enable-transparent-visuals');
+app.commandLine.appendSwitch('disable-gpu');
 
 function createWindow() {
   var isdebug = true;
@@ -31,6 +32,29 @@ function createWindow() {
     browser = null;
   });
 
+  const printDialog = new BrowserWindow({ 
+    width: 800, 
+    height: 600, 
+    frame : false , 
+    show: false,
+    transparent:true, 
+    skipTaskbar: true,
+    webPreferences: {
+      contextIsolation:false,
+      nodeIntegration:true,
+    }
+  });
+
+  printDialog.maximize();
+
+  ipcMain.on('cancel-print', (event) => {
+    printDialog.hide();
+  });
+
+  printDialog.loadURL(fileUrl(`${__dirname}/renderer/printDialog.html`))
+  if (isDev) {
+    printDialog.webContents.openDevTools({ mode:"detach" });
+  }
 
   var menu = new Menu();
 
@@ -50,9 +74,10 @@ function createWindow() {
     } }));
     menu.append(new MenuItem({ type: 'separator' }));
     menu.append(new MenuItem({ label: 'Print', click: function(event) {
-      webContents.print();
+      //webContents.print();
+      printDialog.show();
    //   event.preventDefault();
-    } }));
+    }}));
     menu.append(new MenuItem({ type: 'separator' }));
     menu.append(new MenuItem({ label: 'Inspect Element', click: function(event) {
       webContents.toggleDevTools();

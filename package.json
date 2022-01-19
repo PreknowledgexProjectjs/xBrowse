@@ -36,7 +36,7 @@
       "icon": "icons/icon.ico"
     },
     "linux": {
-      "target": "deb",
+      "target": "appimage",
       "maintainer": "pxlinux",
       "icon": "icons/icon.ico"
     }
