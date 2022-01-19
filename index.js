@@ -346,9 +346,9 @@ class BrowserLikeWindow extends EventEmitter {
         log.debug('did-start-loading > set loading');
         this.setTabConfig(id, { isLoading: true });
       })
-      .on('did-fail-load', (errorDescription) => {
-        log.debug('did-fail-loading > '+ errorDescription );
-        webContents.loadURL(fileUrl(`${__dirname}/main/renderer/crashFailure.html`));
+      .on('did-fail-load', (event, code, desc, url, isMainFrame) => {
+        log.debug(`did-fail-loading > \n ErrorDesc : ${desc} \n ErrorCode : ${code} `);
+        webContents.loadURL(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`)+`?errorDescription=${desc}&code=${code}`);
         this.setTabConfig(id, { isLoading: false });
       })
       .on('did-start-navigation', (e, href, isInPlace, isMainFrame) => {
@@ -370,8 +370,8 @@ class BrowserLikeWindow extends EventEmitter {
             href = "px://help";
           }
 
-          if(href.includes(fileUrl(`${__dirname}/main/renderer/crashFailure.html`))){
-            href = "px://crash";
+          if(href.includes(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`))){
+            href = "px://network-error";
           }
 
           if(href.includes(fileUrl(`${__dirname}/main/renderer/credits.html`))){
