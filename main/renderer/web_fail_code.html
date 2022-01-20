@@ -9,16 +9,23 @@
 	<div class="col d-flex justify-content-center" style="margin-top: 15%;">
 		<div class="card">
 			<div class="card-body">
-				<h4>Error : Unable to load this webpage</h4>
+				<h4>Error : Unable to load this webpage : <webpage></webpage></h4>
 				<p> Error Info : <tracecode></tracecode> <br> Error Code : <traceerr></traceerr> </p>
 			</div>
+			<button onclick="retry()" class="btn btn-success"> Retry </button>
 		</div>
 	</div>
 <script type="text/javascript" src="./js/ajaxjs.js"></script>
 <script type="text/javascript">
 	var url = new URL(window.location.href);
 	$('tracecode').html(url.searchParams.get("errorDescription"));
+	$('webpage').html(url.searchParams.get("url"));
+	$('button').attr('onclick',`retry('${url.searchParams.get("url")}')`);
 	$('traceerr').html(url.searchParams.get("code"));
+
+	function retry($url){
+		window.location.href = $url;
+	}
 </script>
 </body>
 </html>

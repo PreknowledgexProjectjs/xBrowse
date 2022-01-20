@@ -109,6 +109,8 @@ class BrowserLikeWindow extends EventEmitter {
     ipcMain.on('set-browseview', (event, url) => {
       this.controlView.webContents.loadURL(url);
     })
+
+    
     
     const webContentsAct = actionName => {
       const webContents = this.currentWebContents;
@@ -340,6 +342,10 @@ class BrowserLikeWindow extends EventEmitter {
 
     webContents.on('new-window', this.options.onNewWindow || onNewWindow);
 
+    ipcMain.on('print-webContent', (event,device) => {
+      console.log("print request > "+this.currentView.id);
+      this.printView(this.currentView.id,device);
+    });
     // Keep event in order
     webContents
       .on('did-start-loading', () => {
@@ -348,7 +354,7 @@ class BrowserLikeWindow extends EventEmitter {
       })
       .on('did-fail-load', (event, code, desc, url, isMainFrame) => {
         log.debug(`did-fail-loading > \n ErrorDesc : ${desc} \n ErrorCode : ${code} `);
-        webContents.loadURL(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`)+`?errorDescription=${desc}&code=${code}`);
+        webContents.loadURL(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`)+`?errorDescription=${desc}&code=${code}&url=${url}`);
         this.setTabConfig(id, { isLoading: false });
       })
       .on('did-start-navigation', (e, href, isInPlace, isMainFrame) => {
@@ -531,6 +537,38 @@ class BrowserLikeWindow extends EventEmitter {
       log.debug(`${viewId} destroyed`);
     }
   }
+
+  /**
+   * Print View test
+   */
+   printView(viewId,data) {
+    const view = this.views[viewId];
+    if (view) {
+      view.webContents.print(data
+      ,function(callback){
+        console.log(callback);
+      });
+      log.debug(`${viewId} Printing`);
+    }
+   }
+
+   toggleDevTools(){
+    const view = this.views[this.currentView.id];
+    view.webContents.toggleDevTools({mode:"bottom"});
+   }
+
+   getWebContents(){
+    try{
+      if (this.currentView.id) {
+        const view = this.views[this.currentView.id];
+        return view.webContents;
+      }else{
+        return webContents;
+      }
+    }catch(e){
+      log.debug("Error happend")
+    }
+   }
 }
 
 module.exports = BrowserLikeWindow;

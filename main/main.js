@@ -51,6 +51,7 @@ function createWindow() {
     printDialog.hide();
   });
 
+
   printDialog.loadURL(fileUrl(`${__dirname}/renderer/printDialog.html`))
   if (isDev) {
     printDialog.webContents.openDevTools({ mode:"detach" });
@@ -58,40 +59,51 @@ function createWindow() {
 
   var menu = new Menu();
 
+  console.log(printDialog.webContents.getPrinters());
+
+  ipcMain.on('get-printers', (event) => {
+    event.reply('print-list',printDialog.webContents.getPrinters());
+  });
+
   app.on("web-contents-created", (...[/* event */, webContents]) => {
     menu.clear();
+
     menu.append(new MenuItem({ label: 'Copy Text!', click: function(event) {
-      webContents.copy();
-     // event.preventDefault();
-    } }));
+      browser.getWebContents().copy();
+    }}));
     menu.append(new MenuItem({ label: 'Cut Text!', click: function(event) {
-      webContents.cut();
-    //  event.preventDefault();
-    } }));
+      browser.getWebContents().cut();
+    }}));
     menu.append(new MenuItem({ label: 'Paste Text!', click: function(event) {
-      webContents.paste();
-  //    event.preventDefault();
-    } }));
-    menu.append(new MenuItem({ type: 'separator' }));
-    menu.append(new MenuItem({ label: 'Print', click: function(event) {
-      //webContents.print();
-      printDialog.show();
-   //   event.preventDefault();
+      browser.getWebContents().paste();
+    }}));
+    
+    menu.append(new MenuItem({ label: 'Select All', click: function(event) {
+      browser.getWebContents().selectAll();
     }}));
     menu.append(new MenuItem({ type: 'separator' }));
+    menu.append(new MenuItem({ label: 'Print', click: function(event) {
+      printDialog.show();
+    }}));
+    menu.append(new MenuItem({ type: 'separator' }));
+    menu.append(new MenuItem({ label: 'Reload', click: function(event) {
+      browser.getWebContents().reload();
+    }}));
+    menu.append(new MenuItem({ label: 'Mute', click: function(event) {
+      browser.getWebContents().setAudioMuted(true);
+    }}));
+    menu.append(new MenuItem({ label: 'UnMute', click: function(event) {
+      browser.getWebContents().setAudioMuted(false);
+    }}));
     menu.append(new MenuItem({ label: 'Inspect Element', click: function(event) {
-      webContents.toggleDevTools();
-   //   event.preventDefault();
+      browser.toggleDevTools();
     } }));
-    //Webview is being shown here as a window type
-    console.log(webContents.getType())
+
     webContents.on("context-menu", (event, click) => {
       event.preventDefault();
-      console.log(webContents.getType())
-      menu.popup(webContents);
+      menu.popup(browser.getWebContents());
     }, false);
 
-    //console.log(menu);
   });
 
   ipcMain.on('open-settings', (event, arg) => {
