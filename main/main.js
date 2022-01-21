@@ -20,7 +20,7 @@ function createWindow() {
     isdebug = false;
   }
   browser = new BrowserLikeWindow({
-    controlHeight: 99,
+    controlHeight: 160,
     controlPanel: fileUrl(`${__dirname}/renderer/control.html`),
     startPage: fileUrl(`${__dirname}/renderer/new-tab.html`),
     blankTitle: 'New tab',
@@ -45,14 +45,24 @@ function createWindow() {
     }
   });
 
+  
+
   printDialog.maximize();
 
   ipcMain.on('cancel-print', (event) => {
     printDialog.hide();
   });
 
+  ipcMain.on('close-app',(event) => {
+    app.quit();
+  });
+
+  ipcMain.on('minimize-app',(event) => {
+    browser.win.isMinimized() ? browser.win.restore() : browser.win.minimize()
+  });
 
   printDialog.loadURL(fileUrl(`${__dirname}/renderer/printDialog.html`))
+
   if (isDev) {
     printDialog.webContents.openDevTools({ mode:"detach" });
   }
@@ -64,6 +74,7 @@ function createWindow() {
   ipcMain.on('get-printers', (event) => {
     event.reply('print-list',printDialog.webContents.getPrinters());
   });
+
 
   app.on("web-contents-created", (...[/* event */, webContents]) => {
     menu.clear();
@@ -113,6 +124,7 @@ function createWindow() {
   })
 }
 
+const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
 
 function startCrashScreen(){
   const win = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: true })

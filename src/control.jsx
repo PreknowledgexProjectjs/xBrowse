@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import cx from 'classnames';
 import useConnect from '../../useConnect';
 import * as action from '../../control';
+import { TitleBar } from 'react-desktop/macOs';
 
 const IconLoading = () => (
   <svg
@@ -108,6 +109,10 @@ function Control() {
   const settings = () => {
     ipcRenderer.send('open-settings', 'yes')
   }
+
+  const closeh = () => ipcRenderer.send('close-app');
+  const minimize = () => ipcRenderer.send('minimize-app');;
+  const toggleMaximize = () =>ipcRenderer.send('max-app');;
   const onUrlChange = e => {
     // Sync to tab config
     const v = e.target.value;
@@ -141,6 +146,15 @@ function Control() {
 
   return (
     <div>
+     <TitleBar
+        title="PxBrowse (Electron.js) Expirmental Build :D"
+        controls
+        isFullscreen={false}
+        onCloseClick={closeh}
+        onMinimizeClick={minimize}
+        onMaximizeClick={toggleMaximize}
+        onResizeClick={toggleMaximize}
+      />
       <div className="container">
         <div  className="tabs">
           <>

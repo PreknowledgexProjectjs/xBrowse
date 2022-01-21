@@ -10,6 +10,8 @@ var _useConnect = _interopRequireDefault(require("../../useConnect"));
 
 var action = _interopRequireWildcard(require("../../control"));
 
+var _macOs = require("react-desktop/macOs");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -130,6 +132,16 @@ function Control() {
     ipcRenderer.send('open-settings', 'yes');
   };
 
+  const closeh = () => ipcRenderer.send('close-app');
+
+  const minimize = () => ipcRenderer.send('minimize-app');
+
+  ;
+
+  const toggleMaximize = () => ipcRenderer.send('max-app');
+
+  ;
+
   const onUrlChange = e => {
     // Sync to tab config
     const v = e.target.value;
@@ -166,7 +178,15 @@ function Control() {
     action.sendSwitchTab(id);
   };
 
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", {
+  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_macOs.TitleBar, {
+    title: "PxBrowse (Electron.js) Expirmental Build :D",
+    controls: true,
+    isFullscreen: false,
+    onCloseClick: closeh,
+    onMinimizeClick: minimize,
+    onMaximizeClick: toggleMaximize,
+    onResizeClick: toggleMaximize
+  }), /*#__PURE__*/_react.default.createElement("div", {
     className: "container"
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "tabs"

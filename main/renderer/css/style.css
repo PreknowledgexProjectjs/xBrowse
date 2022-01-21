@@ -13,6 +13,7 @@
 body {
   background: #eef2f6;
   font-size: 14px;
+  overflow: hidden;
 }
 .container {
   height: 100vh;

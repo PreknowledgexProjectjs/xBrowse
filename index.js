@@ -1,4 +1,5 @@
 const { BrowserWindow, BrowserView, ipcMain } = require('electron');
+const fileUrl = require('file-url');
 const windowStateKeeper = require('electron-window-state');
 const EventEmitter = require('events');
 const log = require('electron-log');
@@ -78,6 +79,7 @@ class BrowserLikeWindow extends EventEmitter {
       'height': mainWindowState.height,
       icon:'icons/icon.ico',
       title:"xBrowse ejs",
+      frame:false,
     });
 
     mainWindowState.manage(this.win);
@@ -239,11 +241,12 @@ class BrowserLikeWindow extends EventEmitter {
       this.currentView.setBounds({
       //  x: 25,
         x: 0,
-        y: controlBounds.y + controlBounds.height + 10,
-        z: 25,
+        y: controlBounds.y + controlBounds.height,
         width: contentWidth,
-        height: contentHeight - controlBounds.height - 40
+        height: contentHeight - controlBounds.height
       });
+
+      console.log(`x:0 y:${controlBounds.y + controlBounds.height + 10}`);
     }
   }
 
@@ -346,7 +349,21 @@ class BrowserLikeWindow extends EventEmitter {
       console.log("print request > "+this.currentView.id);
       this.printView(this.currentView.id,device);
     });
+    
+    this.currentView.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
+        let allowedPermissions = ["audioCapture","hid","geolocation"]; // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
+
+        if (allowedPermissions.includes(permission)) {
+                callback(true); // Approve permission request
+        } else {
+          console.error(
+            `The application tried to request permission for '${permission}'. This permission was not whitelisted and has been blocked.`
+          );
+            callback(false); // Deny
+        }
+    });
     // Keep event in order
+
     webContents
       .on('did-start-loading', () => {
         log.debug('did-start-loading > set loading');
@@ -414,6 +431,7 @@ class BrowserLikeWindow extends EventEmitter {
         this.setTabConfig(id, { favicon: favicons[0] });
       })
       .on('did-stop-loading', () => {
+
         log.debug('did-stop-loading', { title: webContents.getTitle() });
         this.setTabConfig(id, { isLoading: false });
       })
@@ -569,6 +587,8 @@ class BrowserLikeWindow extends EventEmitter {
       log.debug("Error happend")
     }
    }
+
+
 }
 
 module.exports = BrowserLikeWindow;

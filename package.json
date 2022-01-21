@@ -1,7 +1,7 @@
 {
   "name": "pxqbrowse-ejs",
   "productName": "XBrowse ejs",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "new",
   "homepage": "https://the-px-proj.ml",
   "keywords": [
@@ -47,6 +47,7 @@
     "jquery": "^3.6.0",
     "nodescriptencryption": "^1.0.4",
     "react": "^16.8.6",
+    "react-desktop": "^0.3.9",
     "react-dom": "^16.8.6",
     "react-loading-icons": "^1.0.8",
     "socket.io": "^4.4.1",
