@@ -20,7 +20,7 @@ function createWindow() {
     isdebug = false;
   }
   browser = new BrowserLikeWindow({
-    controlHeight: 160,
+    controlHeight: 109,
     controlPanel: fileUrl(`${__dirname}/renderer/control.html`),
     startPage: fileUrl(`${__dirname}/renderer/new-tab.html`),
     blankTitle: 'New tab',

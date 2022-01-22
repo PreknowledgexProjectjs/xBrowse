@@ -178,15 +178,7 @@ function Control() {
     action.sendSwitchTab(id);
   };
 
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_macOs.TitleBar, {
-    title: "PxBrowse (Electron.js) Expirmental Build :D",
-    controls: true,
-    isFullscreen: false,
-    onCloseClick: closeh,
-    onMinimizeClick: minimize,
-    onMaximizeClick: toggleMaximize,
-    onResizeClick: toggleMaximize
-  }), /*#__PURE__*/_react.default.createElement("div", {
+  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", {
     className: "container"
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "tabs"

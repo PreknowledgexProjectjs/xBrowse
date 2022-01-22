@@ -78,8 +78,7 @@ class BrowserLikeWindow extends EventEmitter {
       'width': mainWindowState.width,
       'height': mainWindowState.height,
       icon:'icons/icon.ico',
-      title:"xBrowse ejs",
-      frame:false,
+      title:"PxBrowse (Electron.js) Expirmental Build :D",
     });
 
     mainWindowState.manage(this.win);

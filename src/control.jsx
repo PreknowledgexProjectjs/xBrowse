@@ -146,15 +146,6 @@ function Control() {
 
   return (
     <div>
-     <TitleBar
-        title="PxBrowse (Electron.js) Expirmental Build :D"
-        controls
-        isFullscreen={false}
-        onCloseClick={closeh}
-        onMinimizeClick={minimize}
-        onMaximizeClick={toggleMaximize}
-        onResizeClick={toggleMaximize}
-      />
       <div className="container">
         <div  className="tabs">
           <>
