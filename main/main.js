@@ -109,40 +109,39 @@ function createWindow() {
     menu.append(new MenuItem({ label: 'Inspect Element', click: function(event) {
       browser.toggleDevTools();
     } }));
-
+    menu.append(new MenuItem({ type: 'separator' }));
+    menu.append(new MenuItem({ label: 'Zoom +', click: function(event) {
+      browser.getWebContents().setZoomLevel(browser.getWebContents().getZoomFactor() + 1);
+    }}));
+    menu.append(new MenuItem({ label: 'Zoom -', click: function(event) {
+      browser.getWebContents().setZoomLevel(browser.getWebContents().getZoomFactor() - 1);
+    }}));
     webContents.on("context-menu", (event, click) => {
       event.preventDefault();
       menu.popup(browser.getWebContents());
     }, false);
 
   });
-
-  ipcMain.on('open-settings', (event, arg) => {
-    console.log("Open settings:"+arg) // prints "ping"
-    browser.controlView.webContents.loadURL(fileUrl(`${__dirname}/renderer/settings.html`));
-  //  ipcRenderer.send('set-browseview', )
-  })
 }
 
-const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
 
-function startCrashScreen(){
-  const win = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: true })
-  win.loadURL(fileUrl(`${__dirname}/renderer/crashFailure.html`))
-  if (isDev) {
-    win.webContents.openDevTools({ mode:"detach" });
-  }
-  win.show();
-  setTimeout(function(){
-    win.hide();
-  },55000);
-  win.setAlwaysOnTop(true, 'screen');
-  win.setMinimizable(false);
-}
 
 var isAppStarted = false;
-
+//
 app.on('ready', async () => {
+  const crsh = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: true , show:false, })
+  crsh.loadURL(fileUrl(`${__dirname}/renderer/crashFailure.html`))
+  if (isDev) {
+    crsh.webContents.openDevTools({ mode:"detach" });
+  }
+  function startCrashScreen(){
+    crsh.show();
+  }
+  setTimeout(function(){
+    crsh.hide();
+  },55000);
+  crsh.setAlwaysOnTop(true, 'screen');
+  crsh.setMinimizable(false);
   const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
   const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
   const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
@@ -169,6 +168,7 @@ app.on('ready', async () => {
 
   io.on("connection", (socket) => {
     isAppStarted = true;
+    crsh.hide();
     console.log("connection found@!");
     socket.on('disconnect', () => {
       console.log('Window Closed Code 1');
@@ -194,6 +194,11 @@ app.on('ready', async () => {
   createWindow();
 });
 
+app.on('before-quit', () => {
+  httpServer.close(function () { console.log('Server closed!'); });
+  process.exit(0);
+});
+
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
@@ -201,6 +206,9 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+
+  
+
 });
 
 app.on('activate', () => {

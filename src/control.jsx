@@ -158,7 +158,7 @@ function Control() {
                   className={cx('tab', { active: id === activeID })}
                   onClick={() => switchTab(id)}
                 >
-                  {isLoading ? <IconLoading /> : !!favicon && <img src={favicon} width="16" alt="" />}
+                  {isLoading ? <IconLoading /> : !!favicon && <img src={favicon} width="16" alt="icon" />}
                   <div className="title">
                     <div className="title-content">{title}</div>
                   </div>

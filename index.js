@@ -203,6 +203,7 @@ class BrowserLikeWindow extends EventEmitter {
       if (this.controlView) {
         this.controlView.webContents.destroy();
         this.controlView = null;
+        process.exit(0);
         log.debug('Control view destroyed');
       }
       this.emit('closed');
@@ -350,16 +351,17 @@ class BrowserLikeWindow extends EventEmitter {
     });
     
     this.currentView.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
-        let allowedPermissions = ["audioCapture","hid","geolocation"]; // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
+        // let allowedPermissions = ["audioCapture","hid","geolocation"]; // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
 
-        if (allowedPermissions.includes(permission)) {
-                callback(true); // Approve permission request
-        } else {
-          console.error(
-            `The application tried to request permission for '${permission}'. This permission was not whitelisted and has been blocked.`
-          );
-            callback(false); // Deny
-        }
+        // if (allowedPermissions.includes(permission)) {
+        //         callback(true); // Approve permission request
+        // } else {
+        //   console.error(
+        //     `The application tried to request permission for '${permission}'. This permission was not whitelisted and has been blocked.`
+        //   );
+        //     callback(false); // Deny
+        // }
+      callback(true);
     });
     // Keep event in order
 

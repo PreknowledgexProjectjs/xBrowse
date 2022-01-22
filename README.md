@@ -30,6 +30,11 @@ Or, with *Yarn*:
 ```sh
 yarn start
 ```
+#### Step 3 : Run it (2nd way typing rs in cmd to restart process & compile jsx)
+with *Yarn*:
+```sh
+yarn runjs
+```
 
 #### Step 5 (Optional) : Compiling to executables
 With *NPM*:
