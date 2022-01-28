@@ -1,16 +1,35 @@
 const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow  } = require('electron');
 //Expirmental Reuqires
-const { createServer } = require('http');
-const { Server } = require('socket.io');
+
 //Expirmental requires ends :D
+const net = require('net');
 const fileUrl = require('file-url');
 const BrowserLikeWindow = require('../index');
 const isDev = require('electron-is-dev');
 
 let browser;
 
+var port_in = 35565;
+
 app.commandLine.appendSwitch('enable-transparent-visuals');
 app.commandLine.appendSwitch('disable-gpu');
+
+var portInUse = function(port, callback) {
+    var server = net.createServer(function(socket) {
+    socket.write('Echo server\r\n');
+      socket.pipe(socket);
+    });
+
+    server.on('error', function (e) {
+      callback(true);
+    });
+    server.on('listening', function (e) {
+      server.close();
+      callback(false);
+    });
+
+    server.listen(port, '127.0.0.1');
+};
 
 function createWindow() {
   var isdebug = true;
@@ -31,7 +50,7 @@ function createWindow() {
   browser.on('closed', () => {
     browser = null;
   });
-
+  port_in = browser.port_to_open;
   const printDialog = new BrowserWindow({ 
     width: 800, 
     height: 600, 
@@ -122,14 +141,7 @@ function createWindow() {
     }, false);
 
   });
-}
-
-
-
-var isAppStarted = false;
-//
-app.on('ready', async () => {
-  const crsh = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: true , show:false, })
+  const crsh = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: true , show:false, });
   crsh.loadURL(fileUrl(`${__dirname}/renderer/crashFailure.html`))
   if (isDev) {
     crsh.webContents.openDevTools({ mode:"detach" });
@@ -142,56 +154,32 @@ app.on('ready', async () => {
   },55000);
   crsh.setAlwaysOnTop(true, 'screen');
   crsh.setMinimizable(false);
-  const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
-  const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
-  const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
+  ipcMain.on('loaded_yes',(event) => {
+    crsh.close();
+  });
   setTimeout(function(){
-    if (isAppStarted == false) {
+    if (browser.isAppStarted == false) {
       startCrashScreen();
     }
   },25000);
+}
+
+
+//
+app.on('ready', async () => {
+  
+  const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
+  const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
+  const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
+  
   dataSetup.set('userData' , app.getPath('userData') );
 
   //init advance data
   search_engines.set('google','https://www.google.com/search?q=')
   search_engines.set('yahoo','https://search.yahoo.com/search?p=')
   //init advance data ends here
-  //Expirmental Socket.io
-  const httpServer = createServer();
-  const io = new Server();
-
-  io.attach(httpServer,{
-    cors: {
-      origin: ["file","localhost"]
-    }
-  });
-
-  io.on("connection", (socket) => {
-    isAppStarted = true;
-    crsh.hide();
-    console.log("connection found@!");
-    socket.on('disconnect', () => {
-      console.log('Window Closed Code 1');
-    });
-    socket.on('code_exec', (code,page) => {
-      var codeEval = eval(code);
-      io.emit('code_exec_result', codeEval,page);
-    });
-    socket.on('get_settings_', (data,page) => {
-     // var codeEval = ;
-      io.emit('code_exec_result', settings_data.get(data),page);
-    });
-    socket.on('code_exec_result', (code,page) => {
-      io.emit('code_exec_result', code,page);
-    });
-    socket.on('toastR', (msg) => {
-      io.emit('toastR', msg);
-    });
-  });
-
-  httpServer.listen(36214);
-  //Expiremntal code ends here :D
-  createWindow();
+   //Expiremntal code ends here :D
+  var ib = createWindow();
 });
 
 app.on('before-quit', () => {

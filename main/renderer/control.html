@@ -14,6 +14,8 @@
   <script type="text/javascript" src="./js/control-js.js"></script>
   <script src="./js/socket.io.js"></script>
   <script type="text/javascript">
+    const { ipcRenderer } = require('electron');
+    ipcRenderer.send('loaded_yes');
     var socket = io.connect('http://localhost:36214',{secure: true,rejectUnauthorized: false});
     socket.on('connect',function(){
       socket.on('toastR', function(msg) {

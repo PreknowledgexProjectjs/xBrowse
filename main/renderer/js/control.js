@@ -195,10 +195,14 @@ function Control() {
         active: id === activeID
       }),
       onClick: () => switchTab(id)
-    }, isLoading ? /*#__PURE__*/_react.default.createElement(IconLoading, null) : !!favicon && /*#__PURE__*/_react.default.createElement("img", {
+    }, isLoading ? /*#__PURE__*/_react.default.createElement("img", {
+      src: "https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif",
+      width: "16",
+      alt: "icon"
+    }) : !!favicon && /*#__PURE__*/_react.default.createElement("img", {
       src: favicon,
       width: "16",
-      alt: ""
+      alt: "icon"
     }), /*#__PURE__*/_react.default.createElement("div", {
       className: "title"
     }, /*#__PURE__*/_react.default.createElement("div", {

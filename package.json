@@ -33,7 +33,7 @@
     },
     "win": {
       "asar": true,
-      "target": "nsis",
+      "target": "msi",
       "icon": "icons/icon.ico"
     }
   },

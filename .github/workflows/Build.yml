@@ -39,7 +39,7 @@ jobs:
 
       - name: Application Build on Windows
         if: matrix.os == 'windows-latest'
-        run: yarn dist --win nsis:x64
+        run: yarn dist --win msi:x64
         env:
           GH_TOKEN: ${{ secrets.token }}
 

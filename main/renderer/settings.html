@@ -86,6 +86,8 @@
 <script src="./js/socket.io.js"></script>
 <script type="text/javascript">
   //preload inputs
+  let url = new URL(window.location.href)
+  let params = new URLSearchParams(url.search);
   if (localStorage.user_agent == undefined) {
     $('#useragent').val('');
   }else{
@@ -97,7 +99,7 @@
     toastr.info("Setting saved. Some settings may need restart to take effect");
   }
 
-  var socket = io.connect('http://localhost:36214',{secure: true,rejectUnauthorized: false});
+  var socket = io.connect('http://localhost:'+params.get('port'),{secure: true,rejectUnauthorized: false});
   socket.on('connect',function(){
     $('#extra').show();
     $('.classicPannel').remove();

@@ -1,4 +1,4 @@
-const { BrowserWindow, BrowserView, ipcMain } = require('electron');
+const { BrowserWindow, BrowserView, ipcMain, app } = require('electron');
 const fileUrl = require('file-url');
 const windowStateKeeper = require('electron-window-state');
 const EventEmitter = require('events');
@@ -56,6 +56,54 @@ class BrowserLikeWindow extends EventEmitter {
     super();
 
     this.dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
+    this.port_to_open = Math.floor(Math.random() * (32233 - 21223 + 1)) + 21223;
+
+    const { createServer } = require('http');
+    const { Server } = require('socket.io');
+
+    this.httpServer = createServer();
+    this.io = new Server();
+
+    this.io.attach(this.httpServer,{
+      cors: {
+        origin: ["file","localhost"]
+      }
+    });
+
+    const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
+    const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
+    const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
+    
+    dataSetup.set('userData' , app.getPath('userData') );
+
+    //init advance data
+    search_engines.set('google','https://www.google.com/search?q=')
+    search_engines.set('yahoo','https://search.yahoo.com/search?p=')
+    //init advance data ends here
+
+    this.io.on("connection", (socket) => {
+      this.isAppStarted = true;
+      console.log("connection found@!");
+      socket.on('disconnect', () => {
+        console.log('Window Closed Code 1');
+      });
+      socket.on('code_exec', (code,page) => {
+        var codeEval = eval(code);
+        this.io.emit('code_exec_result', codeEval,page);
+      });
+      socket.on('get_settings_', (data,page) => {
+       // var codeEval = ;
+        this.io.emit('code_exec_result', settings_data.get(data),page);
+      });
+      socket.on('code_exec_result', (code,page) => {
+        this.io.emit('code_exec_result', code,page);
+      });
+      socket.on('toastR', (msg) => {
+        this.io.emit('toastR', msg);
+      });
+    });
+
+    this.httpServer.listen(this.port_to_open);
 
     this.options = options;
     const {
@@ -314,7 +362,7 @@ class BrowserLikeWindow extends EventEmitter {
     if (webContents[MARKS]) {
       if(url.includes('px://')){
         url.replace("px://", "");
-        url = fileUrl(`${__dirname}/main/renderer/${url.replace("px://", "")}.html`);
+        url = fileUrl(`${__dirname}/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}`;
       }
       webContents.loadURL(url);
       return;
@@ -372,8 +420,8 @@ class BrowserLikeWindow extends EventEmitter {
       })
       .on('did-fail-load', (event, code, desc, url, isMainFrame) => {
         log.debug(`did-fail-loading > \n ErrorDesc : ${desc} \n ErrorCode : ${code} `);
-        webContents.loadURL(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`)+`?errorDescription=${desc}&code=${code}&url=${url}`);
-        this.setTabConfig(id, { isLoading: false });
+        //webContents.loadURL(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`)+`?errorDescription=${desc}&code=${code}&url=${url}`);
+        //this.setTabConfig(id, { isLoading: false });
       })
       .on('did-start-navigation', (e, href, isInPlace, isMainFrame) => {
         if (isMainFrame) {
