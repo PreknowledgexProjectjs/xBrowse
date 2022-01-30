@@ -56,6 +56,7 @@ class BrowserLikeWindow extends EventEmitter {
     super();
 
     this.dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
+    this.history = require('data-store')({ path: app.getPath('userData') + '/history.json' });
     this.port_to_open = Math.floor(Math.random() * (32233 - 21223 + 1)) + 21223;
 
     const { createServer } = require('http');
@@ -455,6 +456,27 @@ class BrowserLikeWindow extends EventEmitter {
             isInPlace,
             isMainFrame
           });
+
+          let date_ob = new Date();
+          let date = ("0" + date_ob.getDate()).slice(-2);
+          let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+          let year = date_ob.getFullYear();
+          let hours = date_ob.getHours();
+          let minutes = date_ob.getMinutes();
+          let seconds = date_ob.getSeconds();
+
+          this.history.set(`TS:${Date.now()}`,{
+            url:href,
+            date:{
+              date:date,
+              month:month,
+              year:year,
+              hours:hours,
+              minutes:minutes,
+              seconds:seconds,
+            }
+          });
+
           this.setTabConfig(id, { url: href, href });
           /**
            * url-updated event.

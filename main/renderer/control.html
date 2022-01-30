@@ -15,15 +15,19 @@
   <script src="./js/socket.io.js"></script>
   <script type="text/javascript">
     const { ipcRenderer } = require('electron');
+    const $ = require('jquery');
     ipcRenderer.send('loaded_yes');
-    var socket = io.connect('http://localhost:36214',{secure: true,rejectUnauthorized: false});
-    socket.on('connect',function(){
-      socket.on('toastR', function(msg) {
-        //toastr.success(msg)
-        alert(msg);
-      });
-    });
-
+    ipcRenderer.send('user_info');
+    // var socket = io.connect('http://localhost:36214',{secure: true,rejectUnauthorized: false});
+    // socket.on('connect',function(){
+    //   socket.on('toastR', function(msg) {
+    //     //toastr.success(msg)
+    //     alert(msg);
+    //   });
+    // });
+    ipcRenderer.on('user_get_info', (event, arg) => {
+      $('#login_logo').attr('src',arg.login_logo)
+    })
   </script>
 </body>
 </html>

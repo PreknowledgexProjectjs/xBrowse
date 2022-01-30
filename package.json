@@ -38,6 +38,7 @@
     }
   },
   "dependencies": {
+    "axios": "^0.25.0",
     "classnames": "^2.2.6",
     "data-store": "^4.0.3",
     "electron-is-dev": "^2.0.0",

@@ -9,8 +9,11 @@ const settings_data = require('data-store')({ path: app.getPath('userData') + '/
 const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
 const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
 const isDev = require('electron-is-dev');
+const history = require('data-store')({ path: app.getPath('userData') + '/history.json' });
 
-const x = require('../x.js');
+console.log(history.data);
+
+const x = require('../prod_lib/x.js');
 
 let browser;
 
@@ -55,6 +58,7 @@ function createWindow() {
   browser.on('closed', () => {
     browser = null;
   });
+
   port_in = browser.port_to_open;
   const printDialog = new BrowserWindow({ 
     width: 800, 
@@ -68,8 +72,6 @@ function createWindow() {
       nodeIntegration:true,
     }
   });
-
-
 
   printDialog.maximize();
 
@@ -93,11 +95,35 @@ function createWindow() {
 
   var menu = new Menu();
 
-  console.log(printDialog.webContents.getPrinters());
+  //console.log(printDialog.webContents.getPrinters());
 
   ipcMain.on('get-printers', (event) => {
     event.reply('print-list',printDialog.webContents.getPrinters());
   });
+
+  if (settings_data.get('user_info.login_id') !== undefined) {
+    ipcMain.on('user_info', (event) => {
+      require('axios').get(`https://x.preknowledge.in/Api/get_user_data/${settings_data.get('user_info.login_id')}`)
+      .then(function (response) {
+        settings_data.set('user_info',response.data)
+        event.reply('user_get_info',response.data);
+      })
+      .catch(function (error) {
+         event.reply('user_get_info',settings_data.get('user_info.login_image'));
+      });
+    });
+
+    require('axios').get(`https://x.preknowledge.in/Api/get_user_data/${settings_data.get('user_info.login_id')}`)
+    .then(function (response) {
+      if (response.data.login_status == 0) {
+        browser.win.hide();
+        startWelcomeScreen(`?error=true&message=Your account is either banned or disabled`);
+      }else if (response.data.login_insiderUpdates == 0) {
+        browser.win.hide();
+        startWelcomeScreen(`?error=true&message=You are not allowed for Beta Updates <br> Please go to : https://x.preknowledge.in/Profile and edit profile and allow insider updates`);
+      }
+    });
+  }
 
   ipcMain.on('get-signin-url', (event) => {
     event.reply('signin-url',x.generate(
@@ -112,6 +138,10 @@ function createWindow() {
   });
 
   if (settings_data.get('is_welcomed') == undefined) {
+    startWelcomeScreen();
+  }
+
+  function startWelcomeScreen(args = ''){
     //we gonna hide mainWindow in depths
     browser.win.hide();
     //we gonna /summon xbrowse:welcome_screen
@@ -128,10 +158,11 @@ function createWindow() {
       },
       icon:'icons/icon.ico'
     }); 
-    xbrowse_welcome_screen.loadURL(fileUrl(`${__dirname}/renderer/you_welcome.html`));
+    xbrowse_welcome_screen.loadURL(fileUrl(`${__dirname}/renderer/you_welcome.html`)+args);
     if (isDev) {
       xbrowse_welcome_screen.webContents.openDevTools({ mode:"detach" });
     }
+    xbrowse_welcome_screen.setResizable(false);
     ipcMain.on('complete_setup',(event,arg) => {
       settings_data.set('user_info',arg);
       settings_data.set('is_welcomed',true);
@@ -140,8 +171,8 @@ function createWindow() {
       app.exit()
     });
   }
-
-  app.on("web-contents-created", (...[/* event */, webContents]) => {
+  
+  app.on("web-contents-created", (...[/** Event **/,webContents]) => {
     menu.clear();
 
     menu.append(new MenuItem({ label: 'Copy Text!', click: function(event) {

@@ -29,6 +29,7 @@
 </div>
 <div class="card d-flex justify-content-center">
   <div class="card-body">
+  	
     <h5 class="card-title">Hey , Welcome to xBrowse Setup</h5>
     <p class="card-text">
     	We'll ask you some very few questions and at last we will prompt you to sign in!
@@ -42,7 +43,7 @@
 <script type="text/javascript">
 	const { ipcRenderer } = require('electron');
 	var url = new URL(window.location.href);
-	const x = require('../../x.js');
+	const x = require('../../prod_lib/x.js');
 	const $ = require('jquery');
 
 	ipcRenderer.send('get-signin-url');
@@ -52,12 +53,18 @@
 
 	var co_data;
 
+	if(url.searchParams.get("error") == 'true'){
+		step(5)
+		$('#waiter').html(url.searchParams.get("message"));
+	}
+
 	if(url.searchParams.get("callback") !== null){
 		step(3);
 		setTimeout(function(){
 			var c_data = x.data(url.searchParams.get("callback"));
 			co_data = c_data.data;
 			$('#welcome_name').html("Welcome , "+c_data.data.login_name);
+			$('#login_logo').attr('src',c_data.data.login_logo)
 		},200);
 	}
 
@@ -89,7 +96,8 @@
 			`);
 		}else if(id == 2){
 			$('.card-body').html(`
-				<h5 class="card-title">Sign-in with pxaccount</h5>
+				
+					<h5 class="card-title">Sign-in with pxaccount</h5>
 					<p class="card-text">
     				One More Step to go!
     			</p>
@@ -101,11 +109,22 @@
     		`);
 		}else if(id == 3){
 			$('.card-body').html(`
+				<div class="row">
+				    <div class="col-4 mx-auto text-center">
+				        <img class="mx-auto d-block" src="" id="login_logo" style="width:90px; height:80px; border-radius:20%;">  
+				    </div>
+				</div>
 				<h5 class="card-title" id="welcome_name">Welcome</h5>
 				<a href="#" class="btn btn-primary d-flex justify-content-center" onclick="step(4)">Let's Go!</a>
 			`);
 		}else if(id == 4){
 			ipcRenderer.send('complete_setup',co_data);
+		}else if(id ==5){
+
+			$('.card-body').html(`
+				<h3 class="card-title">Something went wrong</h5>
+				<h5 class="card-title" id="waiter">Loading.....</h5>
+			`);
 		}
 		setTimeout(function(){
 			$('.card').show();

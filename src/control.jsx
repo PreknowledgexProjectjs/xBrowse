@@ -202,13 +202,12 @@ function Control() {
                 placeholder="Search or Type a URL"
               />
             {/*</div>*/}
-             <div className="actions">
-              {/*<div
+            <div className="actions">
+              <div
                 className={"settings"}
-                onClick={settings}
               >
-                <IconLeft />
-              </div>*/}
+                <img className="mx-auto d-block" src="" id="login_logo"/>  
+              </div>
             </div>
           </div>
 
