@@ -1,9 +1,9 @@
 {
   "name": "pxqbrowse-ejs",
   "productName": "XBrowse ejsbetaxcper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "new",
-  "homepage": "https://the-px-proj.ml",
+  "homepage": "https://x.preknowledge.in",
   "keywords": [
     "electron",
     "browser",
@@ -39,28 +39,27 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
-    "cli-color": "^2.0.1",
     "data-store": "^4.0.3",
     "electron-is-dev": "^2.0.0",
     "electron-log": "^3.0.7",
     "electron-window-state": "^5.0.3",
     "file-url": "^2.0.2",
     "jquery": "^3.6.0",
-    "nodemon": "^2.0.15",
     "nodescriptencryption": "^1.0.4",
     "react": "^16.8.6",
     "react-desktop": "^0.3.9",
     "react-dom": "^16.8.6",
     "react-loading-icons": "^1.0.8",
-    "socket.io": "^4.4.1",
-    "toastr": "^2.1.4"
+    "socket.io": "^4.4.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.8",
     "@babel/core": "^7.16.7",
     "@babel/preset-env": "^7.16.8",
     "@babel/preset-react": "^7.16.7",
+    "cli-color": "^2.0.1",
     "electron": "^16.0.7",
-    "electron-builder": "^22.14.5"
+    "electron-builder": "^22.14.5",
+    "nodemon": "^2.0.15"
   }
 }
