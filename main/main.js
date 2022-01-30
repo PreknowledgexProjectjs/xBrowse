@@ -5,7 +5,12 @@ const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow  } = require('
 const net = require('net');
 const fileUrl = require('file-url');
 const BrowserLikeWindow = require('../index');
+const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
+const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
+const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
 const isDev = require('electron-is-dev');
+
+const x = require('../x.js');
 
 let browser;
 
@@ -64,7 +69,7 @@ function createWindow() {
     }
   });
 
-  
+
 
   printDialog.maximize();
 
@@ -94,6 +99,47 @@ function createWindow() {
     event.reply('print-list',printDialog.webContents.getPrinters());
   });
 
+  ipcMain.on('get-signin-url', (event) => {
+    event.reply('signin-url',x.generate(
+      "xbrowse_pxapi25565",
+      "pb_12456547fd",
+      fileUrl(`${__dirname}/renderer/you_welcome.html`),
+    ));
+  });
+
+  ipcMain.on('set_search_engine', (event,name) => {
+    settings_data.set('default_search',name);
+  });
+
+  if (settings_data.get('is_welcomed') == undefined) {
+    //we gonna hide mainWindow in depths
+    browser.win.hide();
+    //we gonna /summon xbrowse:welcome_screen
+    const xbrowse_welcome_screen = new BrowserWindow({ 
+      width: 400, 
+      height: 500, 
+      frame : false,
+      show: true,
+      title: "Well hello again Friend i'm xBrowse",
+      webPreferences: {
+        contextIsolation:false,
+        nodeIntegration:true,
+        webSecurity: false
+      },
+      icon:'icons/icon.ico'
+    }); 
+    xbrowse_welcome_screen.loadURL(fileUrl(`${__dirname}/renderer/you_welcome.html`));
+    if (isDev) {
+      xbrowse_welcome_screen.webContents.openDevTools({ mode:"detach" });
+    }
+    ipcMain.on('complete_setup',(event,arg) => {
+      settings_data.set('user_info',arg);
+      settings_data.set('is_welcomed',true);
+      xbrowse_welcome_screen.close();
+      app.relaunch()
+      app.exit()
+    });
+  }
 
   app.on("web-contents-created", (...[/* event */, webContents]) => {
     menu.clear();
@@ -148,29 +194,25 @@ function createWindow() {
   }
   function startCrashScreen(){
     crsh.show();
+    setTimeout(function(){
+      crsh.hide();
+    },55000);
   }
-  setTimeout(function(){
-    crsh.hide();
-  },55000);
   crsh.setAlwaysOnTop(true, 'screen');
   crsh.setMinimizable(false);
   ipcMain.on('loaded_yes',(event) => {
     crsh.close();
   });
-  setTimeout(function(){
-    if (browser.isAppStarted == false) {
-      startCrashScreen();
-    }
-  },25000);
+ setTimeout(function(){
+   if (browser.isAppStarted == false) {
+     startCrashScreen();
+   }
+ },25000);
 }
 
 
 //
 app.on('ready', async () => {
-  
-  const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
-  const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
-  const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
   
   dataSetup.set('userData' , app.getPath('userData') );
 
@@ -178,8 +220,9 @@ app.on('ready', async () => {
   search_engines.set('google','https://www.google.com/search?q=')
   search_engines.set('yahoo','https://search.yahoo.com/search?p=')
   //init advance data ends here
-   //Expiremntal code ends here :D
-  var ib = createWindow();
+  //Expiremntal code ends here :D
+  //var ib = createWindow(); <-- createWindow in a vairable is useless as swamp hut cauldrum
+  createWindow(); // <-- ah this is fine :DDDDDDDDD
 });
 
 app.on('before-quit', () => {

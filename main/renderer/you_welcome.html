@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Welcome!</title>
+	<link rel="stylesheet" type="text/css" href="./css/bsss.css">
+	<style type="text/css">
+	.overlay {
+	    position: fixed;
+	    width: 100%;
+	    height: 100%;
+	    z-index: 1000;
+	    display: none;
+	    left: 0px;
+	    background: black; 
+  		backdrop-filter: blur(10px);
+	    filter: alpha(opacity=50);
+	 }
+	</style>
+</head>
+<body>
+<input type="hidden" id="px_redir">
+<div class="overlay">
+  <div class="d-flex justify-content-center">  
+    <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem; z-index: 20;">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</div>
+<div class="card d-flex justify-content-center">
+  <div class="card-body">
+    <h5 class="card-title">Hey , Welcome to xBrowse Setup</h5>
+    <p class="card-text">
+    	We'll ask you some very few questions and at last we will prompt you to sign in!
+    	Signin via Px Acct!
+
+    	<h3>Let's go??</h3>
+    </p>
+    <a href="#" onclick="step(1)" class="btn btn-primary d-flex justify-content-center">Let's Go!</a>
+  </div>
+</div>
+<script type="text/javascript">
+	const { ipcRenderer } = require('electron');
+	var url = new URL(window.location.href);
+	const x = require('../../x.js');
+	const $ = require('jquery');
+
+	ipcRenderer.send('get-signin-url');
+	ipcRenderer.on('signin-url', (event, arg) => {
+	  $('#px_redir').val(arg);
+	})
+
+	var co_data;
+
+	if(url.searchParams.get("callback") !== null){
+		step(3);
+		setTimeout(function(){
+			var c_data = x.data(url.searchParams.get("callback"));
+			co_data = c_data.data;
+			$('#welcome_name').html("Welcome , "+c_data.data.login_name);
+		},200);
+	}
+
+	function step(id){
+		$('.card').hide();
+		$('.overlay').show();
+		if (id == 1) {
+			$('.card-body').html(`
+				<h5 class="card-title">Default Search Engine?</h5>
+				<p class="card-text">
+    				Which will be your default search engine?
+    			</p>
+    			<div class="container">
+                	<div class="row">
+    			    <div class="col col-md-4" onclick="changeSearchEngineto('google')">
+                        <div class="card h-100">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png" class="card-img-top" alt="google" style="width:100px; height: 100px;">
+                            <p class="card-body">Google</p>
+                        </div>
+                    </div>
+                    <div class="col col-md-4" onclick="changeSearchEngineto('yahoo')">
+                        <div class="card h-100">
+                          <img src="https://cdn.vox-cdn.com/thumbor/JiRzoaU535Vs9YjU6LcJSvIGFBs=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19224216/mb_yahoo_02.jpg" class="card-img-top" alt="google" style="width:100px; height: 100px;">
+                            <p class="card-body">Yahoo</p>
+                        </div>
+                    </div>
+                    </div>
+               	</div>
+			`);
+		}else if(id == 2){
+			$('.card-body').html(`
+				<h5 class="card-title">Sign-in with pxaccount</h5>
+					<p class="card-text">
+    				One More Step to go!
+    			</p>
+    			<div class="alert alert-danger">
+    				Sign in with the PxApi !
+    			</div>
+    			<a href="${$('#px_redir').val()}" class="btn btn-primary d-flex justify-content-center">Log in!</a>
+    			<a href="#" disabled="" class="btn btn-primary d-flex justify-content-center disabled">Log in with OneID! (Coming Soon)</a>
+    		`);
+		}else if(id == 3){
+			$('.card-body').html(`
+				<h5 class="card-title" id="welcome_name">Welcome</h5>
+				<a href="#" class="btn btn-primary d-flex justify-content-center" onclick="step(4)">Let's Go!</a>
+			`);
+		}else if(id == 4){
+			ipcRenderer.send('complete_setup',co_data);
+		}
+		setTimeout(function(){
+			$('.card').show();
+			$('.overlay').hide();
+		},200);
+	}
+
+	function changeSearchEngineto(argument) {
+		ipcRenderer.send('set_search_engine',argument);
+		step(2);
+	}
+</script>
+</body>
+</html>
