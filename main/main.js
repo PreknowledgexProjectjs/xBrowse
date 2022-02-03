@@ -171,7 +171,31 @@ function createWindow() {
       app.exit()
     });
   }
-  
+
+  const Appmenu = new Menu()
+  Appmenu.append(new MenuItem({
+    label: 'Tab',
+    submenu: [
+      {
+        role: 'Print',
+        accelerator: process.platform === 'darwin' ? 'Ctrl+P' : 'Ctrl+P',
+        click: () => {
+         printDialog.show();
+        }
+      },
+      {
+        role: 'New',
+        accelerator: process.platform === 'darwin' ? 'Ctrl+T' : 'Ctrl+T',
+        click: () => {
+         browser.newTabMainProcess();
+        }
+      }
+    ]
+  }))
+
+  Menu.setApplicationMenu(Appmenu)
+
+
   app.on("web-contents-created", (...[/** Event **/,webContents]) => {
     menu.clear();
 
@@ -240,7 +264,6 @@ function createWindow() {
    }
  },25000);
 }
-
 
 //
 app.on('ready', async () => {

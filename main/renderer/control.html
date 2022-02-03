@@ -18,16 +18,14 @@
     const $ = require('jquery');
     ipcRenderer.send('loaded_yes');
     ipcRenderer.send('user_info');
-    // var socket = io.connect('http://localhost:36214',{secure: true,rejectUnauthorized: false});
-    // socket.on('connect',function(){
-    //   socket.on('toastR', function(msg) {
-    //     //toastr.success(msg)
-    //     alert(msg);
-    //   });
-    // });
     ipcRenderer.on('user_get_info', (event, arg) => {
       $('#login_logo').attr('src',arg.login_logo)
-    })
+    });
+    let url = new URL(window.location.href)
+    let params = new URLSearchParams(url.search);
+    var lang = JSON.parse(url.searchParams.get("lang"));
+
+    $('#address').attr('placeholder',lang.search_or)
   </script>
 </body>
 </html>

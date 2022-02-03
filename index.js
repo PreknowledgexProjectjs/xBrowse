@@ -57,6 +57,22 @@ class BrowserLikeWindow extends EventEmitter {
 
     this.dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
     this.history = require('data-store')({ path: app.getPath('userData') + '/history.json' });
+
+    const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
+
+    this.lang = "uk?";
+
+    if (settings_data.get('default_lang') == undefined) {
+      this.lang = "en";
+    }else{
+      this.lang = settings_data.get('default_lang');
+    }
+
+    this.current_lang = require(`./main/translations/${this.lang}.json`);
+    this.stringify_lang = JSON.stringify(this.current_lang);
+
+    //console.log("JSON:\n"+JSON.stringify(this.current_lang));
+
     this.port_to_open = Math.floor(Math.random() * (32233 - 21223 + 1)) + 21223;
 
     const { createServer } = require('http');
@@ -71,7 +87,6 @@ class BrowserLikeWindow extends EventEmitter {
       }
     });
 
-    const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
     const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
     const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
     
@@ -128,6 +143,13 @@ class BrowserLikeWindow extends EventEmitter {
       'height': mainWindowState.height,
       icon:'icons/icon.ico',
       title:"PxBrowse (Electron.js) Expirmental Build :D",
+      webPreferences: {
+        contextIsolation: false,
+        nodeIntegration: true,
+        // Allow loadURL with file path in dev environment
+        webSecurity: false,
+        nodeIntegrationInWorker: true
+      }
     });
 
     mainWindowState.manage(this.win);
@@ -145,6 +167,7 @@ class BrowserLikeWindow extends EventEmitter {
       webPreferences: {
         contextIsolation: false,
         nodeIntegration: true,
+        nodeIntegrationInWorker: true,
         // Allow loadURL with file path in dev environment
         webSecurity: false,
         ...controlReferences
@@ -155,7 +178,7 @@ class BrowserLikeWindow extends EventEmitter {
     this.win.addBrowserView(this.controlView);
     this.controlView.setBounds(this.getControlBounds());
     this.controlView.setAutoResize({ width: true });
-    this.controlView.webContents.loadURL(controlPanel);
+    this.controlView.webContents.loadURL(`${controlPanel}?port=${this.port_to_open}&lang=${this.stringify_lang}`);
     ipcMain.on('set-browseview', (event, url) => {
       this.controlView.webContents.loadURL(url);
     })
@@ -359,11 +382,14 @@ class BrowserLikeWindow extends EventEmitter {
     const { id, webContents } = currentView;
 
     // Prevent addEventListeners on same webContents when enter urls in same tab
+    if (url == this.options.blankPage) {
+      url = this.options.blankPage+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
+    }
     const MARKS = '__IS_INITIALIZED__';
     if (webContents[MARKS]) {
       if(url.includes('px://')){
         url.replace("px://", "");
-        url = fileUrl(`${__dirname}/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}`;
+        url = fileUrl(`${__dirname}/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
       }
       webContents.loadURL(url);
       return;
@@ -420,14 +446,14 @@ class BrowserLikeWindow extends EventEmitter {
         this.setTabConfig(id, { isLoading: true });
       })
       .on('did-fail-load', (event, code, desc, url, isMainFrame) => {
-        log.debug(`did-fail-loading > \n ErrorDesc : ${desc} \n ErrorCode : ${code} `);
+        log.debug(`did-fail-loading > \n ErrorDesc : ${desc} \n ErrorCode : ${code} \n isMainFrame : ${isMainFrame}`);
         //webContents.loadURL(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`)+`?errorDescription=${desc}&code=${code}&url=${url}`);
         //this.setTabConfig(id, { isLoading: false });
       })
       .on('did-start-navigation', (e, href, isInPlace, isMainFrame) => {
         if (isMainFrame) {
           const fileUrl = require('file-url');
-          if(href == this.options.blankPage){
+          if(href.includes(this.options.blankPage)){
             href = "";
           }
 
@@ -585,7 +611,7 @@ class BrowserLikeWindow extends EventEmitter {
     const lastView = this.currentView;
     this.setCurrentView(view.id);
     view.setAutoResize({ width: true, height: true });
-    this.loadURL(url || this.options.blankPage);
+    this.loadURL(url || this.options.blankPage+"?lang="+this.stringify_lang);
     this.setTabConfig(view.id, {
       title: this.options.blankTitle || 'about:blank'
     });
@@ -659,7 +685,9 @@ class BrowserLikeWindow extends EventEmitter {
     }
    }
 
-
+   newTabMainProcess(){
+    this.newTab(this.options.blankPage, undefined, '');
+   }
 }
 
 module.exports = BrowserLikeWindow;

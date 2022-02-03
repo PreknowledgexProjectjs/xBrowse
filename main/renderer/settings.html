@@ -9,7 +9,7 @@
 <body>
 <div class="card">
   <div class="card-body" style="height: 450px;">
-    <h3 align="center">XBrowse Configuration</h3>
+    <h3 align="center"><lang id="xbrowse_configuration"></lang></h3>
     <div id="extra" style="display: none;">
       <div class="d-flex align-items-start">
         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -22,7 +22,7 @@
         </div>
         <div class="tab-content" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-            <p> Info : Click on your desired search engine to change it to default ones</p>
+            <p> <lang id="info_se"></lang> </p>
             <div class="container">
                 <div class="row">
                     <div class="col col-md-4" onclick="changeSearchEngineto('google')">
@@ -42,26 +42,39 @@
           </div>
           <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
             <div class="mb-3">
-              <label for="ex_pa" class="form-label">Show Expirmental Features Alert : </label>
+              <label for="ex_pa" class="form-label" id="show_exp_alert"></label>
               <select class="form-control" id="ex_pa">
-                <option value="true"> Yes </option>
-                <option value="false"> No </option>
+                <option value="true" id="yes">  </option>
+                <option value="false" id="no">  </option>
               </select>
             </div>
-            <button class="btn btn-info" onclick="saveAlertChanges()"> Save Changes </button>
+            <button class="btn btn-info" onclick="saveAlertChanges()"> <lang id="save_changes"></lang> </button>
           </div>
           <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
-          <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
-          <div class="tab-pane fade" id="v-pills-ua" role="tabpanel" aria-labelledby="v-pills-ua-tab">
-              <div class="mb-3">
-                <p>If you want to use default UA again then type undefined there to fix that</p>
+          <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+            <div class="mb-3">
+                <p><lang id="change_language"></lang></p>
               </div>
               <div class="mb-3">
-                <label for="useragent" class="form-label">Custom User agent (Restart required)</label>
+                <label for="cL" class="form-label"><lang id="change_language"></lang>: Browser Restart required (::::!!!!)</label>
+                <select class="form-control" id="cL">
+                  <option value="en"> English (EN) </option>
+                  <option value="sp"> Spanish (SP) </option>
+                </select>
+              </div>
+
+              <button onclick="change_language()" class="btn btn-success" id="save_changes3"><lang id="save_changes"></lang></button>
+          </div>
+          <div class="tab-pane fade" id="v-pills-ua" role="tabpanel" aria-labelledby="v-pills-ua-tab">
+              <div class="mb-3">
+                <p><lang id="if_ya_ua"></lang></p>
+              </div>
+              <div class="mb-3">
+                <label for="useragent" class="form-label"><lang id="custom_useragent"></lang></label>
                 <input type="textarea" class="form-control" id="useragent" placeholder="Warrning : might break some websites">
               </div>
 
-              <button onclick="save()" class="btn btn-success"> Save Changes </button>
+              <button onclick="save()" class="btn btn-success" id="save_changes2"><lang id="save_changes"></lang></button>
           </div>
         </div>
       </div>
@@ -70,11 +83,11 @@
     <div class="classicPannel">
 
       <div class="mb-3">
-        <label for="useragent" class="form-label">Custom User agent (Restart required)</label>
+        <label for="useragent" class="form-label"><lang id="custom_useragent"></lang></label>
         <input type="textarea" class="form-control" id="useragent" placeholder="Warrning : might break some websites">
       </div>
 
-      <button onclick="save()" class="btn btn-success"> Save Changes </button>
+      <button onclick="save()" class="btn btn-success"><lang id="save_changes1"></lang></button>
 
     </div>
   </div>
@@ -88,6 +101,7 @@
   //preload inputs
   let url = new URL(window.location.href)
   let params = new URLSearchParams(url.search);
+  var lang = JSON.parse(url.searchParams.get("lang"));
   if (localStorage.user_agent == undefined) {
     $('#useragent').val('');
   }else{
@@ -138,6 +152,22 @@
     toastr.success("Successfully changed default search changed to "+data);
     socket.emit('code_exec',`settings_data.set('default_search','${data}')`,"X");
   }
+
+  function change_language(){
+    save_language($('#cL option:selected').val());
+  }
+
+  function save_language(data){
+    toastr.success("Successfully changed default language to "+data);
+    toastr.info("Please restart your browser to apply changes");
+    socket.emit('code_exec',`settings_data.set('default_lang','${data}')`,"X");
+  }
+
+  $.each(lang, function(index, value) {
+    console.log("Index:"+index+"\nValue:"+value)
+    $(`#${index}`).html(value);
+    $(`#${index}`).attr('value',index);
+  });
 </script>
 </body>
 </html>

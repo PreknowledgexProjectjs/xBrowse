@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>New Tab</title>
+	<title id="new_tab">New Tab</title>
 	<link rel="stylesheet" href="./css/new-tab.css">
 
 	<style type="text/css"></style>
@@ -72,5 +72,15 @@
 		<p>© 2022 Preknowledge.in | New Tab Page by PwL</p>
 	</div>
 	<script src="./js/new-tab.js"></script>
+	<script type="text/javascript" src="./js/ajaxjs.js"></script>
+	<script type="text/javascript">
+		let url = new URL(window.location.href)
+		  let params = new URLSearchParams(url.search);
+		  var lang = JSON.parse(url.searchParams.get("lang"));
+		$.each(lang, function(index, value) {
+		    $(`#${index}`).html(value);
+		    $(`#${index}`).attr('value',index);
+		});
+	</script>
 </body>
 </html>
