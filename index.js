@@ -107,6 +107,13 @@ class BrowserLikeWindow extends EventEmitter {
         var codeEval = eval(code);
         this.io.emit('code_exec_result', codeEval,page);
       });
+      socket.on('get_history',() => {
+        this.io.emit('history_res', this.history.data);
+      })
+      socket.on('clear_history',() => {
+        this.history.clear();
+        this.io.emit('history_res', this.history.data);
+      })
       socket.on('get_settings_', (data,page) => {
        // var codeEval = ;
         this.io.emit('code_exec_result', settings_data.get(data),page);
@@ -461,6 +468,10 @@ class BrowserLikeWindow extends EventEmitter {
             href = "px://settings";
           }
 
+          if(href.includes(fileUrl(`${__dirname}/main/renderer/history.html`))){
+            href = "px://history";
+          }
+
           if(href.includes(fileUrl(`${__dirname}/main/renderer/about.html`))){
             href = "px://about";
           }
@@ -491,17 +502,25 @@ class BrowserLikeWindow extends EventEmitter {
           let minutes = date_ob.getMinutes();
           let seconds = date_ob.getSeconds();
 
-          this.history.set(`TS:${Date.now()}`,{
-            url:href,
-            date:{
-              date:date,
-              month:month,
-              year:year,
-              hours:hours,
-              minutes:minutes,
-              seconds:seconds,
-            }
-          });
+          if (href.includes(fileUrl(`${__dirname}/main/renderer/`))) {
+            console.log("Not allowed to store in history");
+          }else if(href == ''){
+            console.log("Can't store in history");
+          }else if (href.includes('px://')) {
+            console.log("Not allowed to store in history");
+          }else{
+            this.history.set(`${Date.now()}`,{
+              url:href,
+              date:{
+                date:date,
+                month:month,
+                year:year,
+                hours:hours,
+                minutes:minutes,
+                seconds:seconds,
+              }
+            });
+          }
 
           this.setTabConfig(id, { url: href, href });
           /**

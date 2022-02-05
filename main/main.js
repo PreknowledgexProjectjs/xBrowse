@@ -11,7 +11,9 @@ const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json
 const isDev = require('electron-is-dev');
 const history = require('data-store')({ path: app.getPath('userData') + '/history.json' });
 
-console.log(history.data);
+process.env.GOOGLE_API_KEY = 'YOUR_KEY_HERE'
+
+//console.log(history.data);
 
 const x = require('../prod_lib/x.js');
 
