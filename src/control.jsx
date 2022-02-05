@@ -199,14 +199,19 @@ function Control() {
                 value={url || ''}
                 onChange={onUrlChange}
                 onKeyDown={onPressEnter}
+                spellCheck="true"
                 placeholder="Search or Type a URL"
               />
             {/*</div>*/}
-            <div className="actions">
-              <div
+            <div className="actions" id="chip_acc">
+              {/*<div
                 className={"settings"}
               >
                 <img className="mx-auto d-block" src="" id="login_logo"/>  
+              </div>*/}
+              <div className="chip" >
+               <img src="" id="login_logo"/> 
+               <ls className="user_name">  </ls>
               </div>
             </div>
           </div>

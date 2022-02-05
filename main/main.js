@@ -137,6 +137,28 @@ function createWindow() {
     settings_data.set('default_search',name);
   });
 
+  ipcMain.on('view-dialog',(event,arg) => {
+    const dialog = new BrowserWindow({ 
+      width: arg.width, 
+      height: arg.height,
+      x: arg.x,
+      y: arg.y, 
+      frame : false, 
+      transparent:arg.transparent, 
+      skipTaskbar: true, 
+      title: arg.title,
+      webPreferences: {
+        contextIsolation:false,
+        nodeIntegration:true,
+        webSecurity: false
+      },
+      icon:'icons/icon.ico'
+    });
+    dialog.show();
+    dialog.loadURL(fileUrl(`${__dirname}/renderer/dialogs/${arg.url}`));
+    dialog.setResizable(false);
+  });
+
   if (settings_data.get('is_welcomed') == undefined) {
     startWelcomeScreen();
   }

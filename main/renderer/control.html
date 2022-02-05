@@ -20,12 +20,28 @@
     ipcRenderer.send('user_info');
     ipcRenderer.on('user_get_info', (event, arg) => {
       $('#login_logo').attr('src',arg.login_logo)
+      $('.user_name').html(arg.login_name);
     });
     let url = new URL(window.location.href)
     let params = new URLSearchParams(url.search);
     var lang = JSON.parse(url.searchParams.get("lang"));
 
-    $('#address').attr('placeholder',lang.search_or)
+    $('#address').attr('placeholder',lang.search_or);
+    $('.chip').attr('onclick','openAccount_win()');
+    //console.log(rect.top, rect.right, rect.bottom, rect.left);
+    function openAccount_win(){
+      console.log("Clicked");
+      var rect = document.getElementById('chip_acc').getBoundingClientRect();
+      ipcRenderer.send('view-dialog',{
+        x:rect.x,
+        y:rect.y,
+        width:50,
+        height:50,
+        transparent:false,
+        title:"boom",
+        url:"?"
+      });
+    };
   </script>
 </body>
 </html>

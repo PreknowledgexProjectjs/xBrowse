@@ -243,16 +243,19 @@ function Control() {
     value: url || '',
     onChange: onUrlChange,
     onKeyDown: onPressEnter,
+    spellCheck: "true",
     placeholder: "Search or Type a URL"
   }), /*#__PURE__*/_react.default.createElement("div", {
-    className: "actions"
+    className: "actions",
+    id: "chip_acc"
   }, /*#__PURE__*/_react.default.createElement("div", {
-    className: "settings"
+    className: "chip"
   }, /*#__PURE__*/_react.default.createElement("img", {
-    className: "mx-auto d-block",
     src: "",
     id: "login_logo"
-  })))))));
+  }), /*#__PURE__*/_react.default.createElement("ls", {
+    className: "user_name"
+  }, "  ")))))));
 } // eslint-disable-next-line no-undef
 
 

@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
- /* font-family: "Segoe UI", Arial, sans-serif; */
+  font-family: "Segoe UI"; 
   font-weight: bold;
 }
 @font-face {
@@ -95,11 +95,11 @@ body {
   background: #fff;
 }
 .bars .address {
-  width: 100%;
+  width: 70%;
   height: 32px;
   padding: 4px 11px;
-  border: 1px solid #d9d9d9;
-  border-radius: 5px;
+  border: 0px solid black;
+  border-radius: 15px;
   background: #eceff2;
   outline: none;
   font-size: 12px;
@@ -135,12 +135,51 @@ body {
   background: #eee;
 }
 .plusic{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
   background: white;
+  padding: 5px;
+  margin-top: 2px;
   border-radius: 100%;
+  font-size: 10px;
 }
-#login_logo{
+.plusic:hover{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  background: #d6d4ce;
+  padding: 5px;
+  margin-top: 2px;
+  border-radius: 100%;
+  font-size: 10px;
+}
+/*#login_logo{
   width: 30px;
   height: 30px;
-  margin-left: 5px;
+  margin-left: 9px;
   border-radius: 100%;
+}*/
+.chip {
+  display: inline-block;
+  height: 30px;
+  font-size: 10px;
+  width: 250%;
+  margin-left: 9px;
+  line-height: 30px;
+  border-radius: 25px;
+  background-color: #f1f1f1;
+}
+
+.chip img {
+  float: left;
+  margin: 0 10px 0 -25px;
+  width: 30px;
+  margin-left: 9px;
+  height: 30px;
+  border-radius: 50%;
 }
