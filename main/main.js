@@ -48,13 +48,25 @@ function createWindow() {
   }else {
     isdebug = false;
   }
+
+  var isGuest = app.commandLine.hasSwitch("isGuest");
+
+  var guest_win = false;
+
+  if (isGuest) {
+    guest_win = true;
+  }else{
+    guest_win = false;
+  }
+
   browser = new BrowserLikeWindow({
     controlHeight: 109,
     controlPanel: fileUrl(`${__dirname}/renderer/control.html`),
     startPage: fileUrl(`${__dirname}/renderer/new-tab.html`),
     blankTitle: 'New tab',
     blankPage: fileUrl(`${__dirname}/renderer/new-tab.html`),
-    debug: isdebug // will open controlPanel's devtools
+    debug: isdebug, // will open controlPanel's devtools,
+    guest: guest_win,
   });
 
   browser.on('closed', () => {

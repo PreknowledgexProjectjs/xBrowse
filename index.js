@@ -395,6 +395,7 @@ class BrowserLikeWindow extends EventEmitter {
     const MARKS = '__IS_INITIALIZED__';
     if (webContents[MARKS]) {
       if(url.includes('px://')){
+        if (this.options.guest) { return; }
         url.replace("px://", "");
         url = fileUrl(`${__dirname}/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
       }
@@ -508,6 +509,8 @@ class BrowserLikeWindow extends EventEmitter {
             console.log("Can't store in history");
           }else if (href.includes('px://')) {
             console.log("Not allowed to store in history");
+          }else if(this.options.guest){
+            console.log("Not allowed to store history");
           }else{
             this.history.set(`${Date.now()}`,{
               url:href,
