@@ -191,6 +191,10 @@ function Control() {
               <div className={cx('action')} onClick={isLoading ? action.sendStop : action.sendReload}>
                 {isLoading ? <IconClose /> : <IconReload />}
               </div>
+              <div className="chip2" >
+               <img src="../../icons/icon.png" id="site_logo"/> 
+               <ls className="lw"> Hi </ls>
+              </div>
             </div>
             {/*<div className="autocomplete">*/}
               <input

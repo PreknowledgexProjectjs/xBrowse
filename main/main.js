@@ -26,19 +26,19 @@ app.commandLine.appendSwitch('disable-gpu');
 
 var portInUse = function(port, callback) {
     var server = net.createServer(function(socket) {
-    socket.write('Echo server\r\n');
+  socket.write('Echo server\r\n');
       socket.pipe(socket);
-    });
+  });
 
-    server.on('error', function (e) {
+  server.on('error', function (e) {
       callback(true);
-    });
-    server.on('listening', function (e) {
-      server.close();
-      callback(false);
-    });
+  });
+  server.on('listening', function (e) {
+    server.close();
+    callback(false);
+  });
 
-    server.listen(port, '127.0.0.1');
+  server.listen(port, '127.0.0.1');
 };
 
 function createWindow() {
@@ -50,6 +50,8 @@ function createWindow() {
   }
 
   var isGuest = app.commandLine.hasSwitch("isGuest");
+
+  //console.log(process.argv.has("--isGuest"));
 
   var guest_win = false;
 
@@ -327,8 +329,6 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
-
-  
 
 });
 

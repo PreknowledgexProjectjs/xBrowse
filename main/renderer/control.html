@@ -16,15 +16,41 @@
   <script type="text/javascript">
     const { ipcRenderer } = require('electron');
     const $ = require('jquery');
-    ipcRenderer.send('loaded_yes');
-    ipcRenderer.send('user_info');
-    ipcRenderer.on('user_get_info', (event, arg) => {
-      $('#login_logo').attr('src',arg.login_logo)
-      $('.user_name').html(arg.login_name);
-    });
     let url = new URL(window.location.href)
     let params = new URLSearchParams(url.search);
     var lang = JSON.parse(url.searchParams.get("lang"));
+
+    ipcRenderer.send('loaded_yes');
+    ipcRenderer.send('user_info');
+
+    ipcRenderer.on('url-enter-l', (event, url) => {
+      console.log(url);
+      if (url.includes("https://")) {
+        $('.chip2').show();
+        $('.lw').html('Secure');
+      }else if(url.includes("http://")){
+        $('.chip2').show();
+        $('.lw').html('Unsecure');
+      }else if(url.includes("file://")){
+        $('.chip2').show();
+        $('.lw').html('Local File');
+      }else if(url.includes("px://")){
+        $('.chip2').show();
+        $('.lw').html('Secure Px Page');
+      }else{
+        $('.chip2').hide();
+      }
+    });
+
+    ipcRenderer.on('user_get_info', (event, arg) => {
+      if (!url.searchParams.get("guest")) {
+        $('#login_logo').attr('src',arg.login_logo)
+        $('.user_name').html(arg.login_name);
+      }else{
+        $('#login_logo').hide();
+        $('.user_name').html("Guest");
+      }
+    });
 
     $('#address').attr('placeholder',lang.search_or);
     $('.chip').attr('onclick','openAccount_win()');

@@ -185,12 +185,15 @@ class BrowserLikeWindow extends EventEmitter {
     this.win.addBrowserView(this.controlView);
     this.controlView.setBounds(this.getControlBounds());
     this.controlView.setAutoResize({ width: true });
-    this.controlView.webContents.loadURL(`${controlPanel}?port=${this.port_to_open}&lang=${this.stringify_lang}`);
+    if (this.options.guest) { 
+      this.controlView.webContents.loadURL(`${controlPanel}?port=${this.port_to_open}&lang=${this.stringify_lang}&guest=true`);
+    }else{
+      this.controlView.webContents.loadURL(`${controlPanel}?port=${this.port_to_open}&lang=${this.stringify_lang}`);
+    }
+    
     ipcMain.on('set-browseview', (event, url) => {
       this.controlView.webContents.loadURL(url);
     })
-
-    
     
     const webContentsAct = actionName => {
       const webContents = this.currentWebContents;
@@ -221,9 +224,11 @@ class BrowserLikeWindow extends EventEmitter {
         this.emit('control-ready', e);
       },
       'url-change': (e, url) => {
+        e.reply('url-enter-l', url);
         this.setTabConfig(this.currentViewId, { url });
       },
       'url-enter': (e, url) => {
+        e.reply('url-enter-l', url);
         this.loadURL(url);
       },
       act: (e, actName) => webContentsAct(actName),
@@ -553,6 +558,19 @@ class BrowserLikeWindow extends EventEmitter {
 
         log.debug('did-stop-loading', { title: webContents.getTitle() });
         this.setTabConfig(id, { isLoading: false });
+      })
+      .on('did-finish-load',() => {
+        webContents.insertCSS(`
+          * {
+            font-family: "Segoe UI"; 
+            font-weight: bold;
+          }
+          @font-face {
+              font-family: "Segoe UI";
+              font-weight: 300;
+              src: local("Segoe UI Semilight"), local("Segoe UI");
+          }
+        `);
       })
       .on('dom-ready', () => {
         webContents.focus();
