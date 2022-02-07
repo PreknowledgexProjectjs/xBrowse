@@ -53,9 +53,17 @@ function createWindow() {
 
   //console.log(process.argv.has("--isGuest"));
 
+  process.argv.forEach(function(value){
+    if (value.includes('isGuest')) {
+      isGuest = true;
+    }
+  });
+
   var guest_win = false;
+  var new_tab_url = fileUrl(`${__dirname}/renderer/new-tab.html`);
 
   if (isGuest) {
+    new_tab_url = fileUrl(`${__dirname}/renderer/in-guest.html`);
     guest_win = true;
   }else{
     guest_win = false;
@@ -64,9 +72,9 @@ function createWindow() {
   browser = new BrowserLikeWindow({
     controlHeight: 109,
     controlPanel: fileUrl(`${__dirname}/renderer/control.html`),
-    startPage: fileUrl(`${__dirname}/renderer/new-tab.html`),
+    startPage: new_tab_url,
     blankTitle: 'New tab',
-    blankPage: fileUrl(`${__dirname}/renderer/new-tab.html`),
+    blankPage: new_tab_url,
     debug: isdebug, // will open controlPanel's devtools,
     guest: guest_win,
   });
@@ -141,6 +149,14 @@ function createWindow() {
     });
   }
 
+  require('axios').get(`https://xbrowse-update-server.preknowledgeweb.repl.co/?version=${require('../package.json').version}`)
+    .then(function (response) {
+      if (response.data.is_updated == false) {
+        browser.win.hide();
+        startWelcomeScreen(`?error=update&message=${response.data.change_log}`);
+      }
+    });
+
   ipcMain.on('get-signin-url', (event) => {
     event.reply('signin-url',x.generate(
       "xbrowse_pxapi25565",
@@ -151,6 +167,10 @@ function createWindow() {
 
   ipcMain.on('set_search_engine', (event,name) => {
     settings_data.set('default_search',name);
+  });
+
+  ipcMain.on('execute_code', (event,code) => {
+    eval(code);
   });
 
   ipcMain.on('view-dialog',(event,arg) => {
@@ -207,6 +227,11 @@ function createWindow() {
       xbrowse_welcome_screen.close();
       app.relaunch()
       app.exit()
+    });
+
+    ipcMain.on('noupdate',(event,arg) => {
+      xbrowse_welcome_screen.close();
+      browser.win.show();
     });
   }
 

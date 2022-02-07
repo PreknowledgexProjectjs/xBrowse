@@ -53,7 +53,10 @@
 	var co_data;
 
 	if(url.searchParams.get("error") == 'true'){
-		step(5)
+		step(5);
+		$('#waiter').html(url.searchParams.get("message"));
+	}else if (url.searchParams.get("error") == 'update') {
+		step(6);
 		$('#waiter').html(url.searchParams.get("message"));
 	}
 
@@ -124,6 +127,16 @@
 				<h3 class="card-title">Something went wrong</h5>
 				<h5 class="card-title" id="waiter">Loading.....</h5>
 			`);
+		}
+		else if(id ==6){
+			$('.card-body').html(`
+				<h3 class="card-title">Update Available</h5>
+				<h5 class="card-title" id="waiter">Loading.....</h5>
+				<p class="text text-danger">Join Discord server for getting Updates : discord.gg/qAuFBR7TUn</p>
+				<a href="#" class="btn btn-primary d-flex justify-content-center" onclick="step(7)">Coutinue , Later</a>
+			`);
+		}else if(id ==7){
+			ipcRenderer.send('noupdate');
 		}
 		setTimeout(function(){
 			$('.card').show();

@@ -391,6 +391,8 @@ class BrowserLikeWindow extends EventEmitter {
     const fileUrl = require('file-url');
     if (!url || !currentView) return;
 
+    this.controlView.webContents.send('url-enter-l', url);
+
     const { id, webContents } = currentView;
 
     // Prevent addEventListeners on same webContents when enter urls in same tab
@@ -530,6 +532,9 @@ class BrowserLikeWindow extends EventEmitter {
             });
           }
 
+          const view = this.views[this.currentView.id];
+          this.controlView.webContents.send('url-enter-l', href);
+
           this.setTabConfig(id, { url: href, href });
           /**
            * url-updated event.
@@ -616,6 +621,8 @@ class BrowserLikeWindow extends EventEmitter {
     this.win.removeBrowserView(this.currentView);
     this.win.addBrowserView(this.views[viewId]);
     this.currentViewId = viewId;
+    const view = this.views[this.currentView.id];
+    this.controlView.webContents.send('url-enter-l', view.webContents.getURL());
   }
 
   /**

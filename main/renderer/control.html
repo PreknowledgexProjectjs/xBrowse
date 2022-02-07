@@ -27,16 +27,27 @@
       console.log(url);
       if (url.includes("https://")) {
         $('.chip2').show();
+        $('#site_logo').attr('src','../../in_app_icons/lock_http.png');
         $('.lw').html('Secure');
       }else if(url.includes("http://")){
         $('.chip2').show();
+        $('#site_logo').attr('src','../../in_app_icons/unlock_http.png');
         $('.lw').html('Unsecure');
       }else if(url.includes("file://")){
         $('.chip2').show();
+        if ($('#address').val().includes('px://')) {
+          $('#site_logo').attr('src','../../in_app_icons/unlock_http.png');
+          $('.lw').html('Secure Px');
+          return;
+        }else if ($('#address').val() == '') {
+          $('.chip2').hide();
+        }
+        $('#site_logo').attr('src','../../in_app_icons/file_web.jpg');
         $('.lw').html('Local File');
       }else if(url.includes("px://")){
         $('.chip2').show();
-        $('.lw').html('Secure Px Page');
+        $('#site_logo').attr('src','../../icons/icon.png');
+        $('.lw').html('Secure Px');
       }else{
         $('.chip2').hide();
       }
