@@ -149,6 +149,33 @@ function createWindow() {
     });
   }
 
+  var contains = function(needle) {
+    // Per spec, the way to identify NaN is that it is not equal to itself
+    var findNaN = needle !== needle;
+    var indexOf;
+
+    if(!findNaN && typeof Array.prototype.indexOf === 'function') {
+        indexOf = Array.prototype.indexOf;
+    } else {
+        indexOf = function(needle) {
+            var i = -1, index = -1;
+
+            for(i = 0; i < this.length; i++) {
+                var item = this[i];
+
+                if((findNaN && item !== item) || item === needle) {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
+        };
+    }
+
+    return indexOf.call(this, needle) > -1;
+  };
+
   require('axios').get(`https://xbrowse-update-server.preknowledgeweb.repl.co/?version=${require('../package.json').version}`)
     .then(function (response) {
       if (response.data.is_updated == false) {
@@ -251,6 +278,26 @@ function createWindow() {
         accelerator: process.platform === 'darwin' ? 'Ctrl+T' : 'Ctrl+T',
         click: () => {
          browser.newTabMainProcess();
+        }
+      },
+      {
+        role: 'Switch',
+        accelerator: process.platform === 'darwin' ? 'Ctrl+Tab' : 'Ctrl+Tab',
+        click: () => {
+          var calculated_tabID = browser.currentViewId + 1;
+          var uncalculated_tabID = browser.tabs[0];
+          // browser.tabs.forEach(function(value){
+          //   if (value == calculated_tabID) {
+          //     browser.switchTab(calculated_tabID);
+          //   }else{
+          //     browser.switchTab(uncalculated_tabID);
+          //   }
+          // });
+          if (contains.call(browser.tabs, calculated_tabID)) {
+            browser.switchTab(calculated_tabID);
+          }else{
+            browser.switchTab(uncalculated_tabID);
+          }
         }
       }
     ]
