@@ -196,6 +196,10 @@ function createWindow() {
     settings_data.set('default_search',name);
   });
 
+  ipcMain.on('open_settings', (event) => {
+    browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/settings.html`));
+  });
+
   ipcMain.on('execute_code', (event,code) => {
     eval(code);
   });

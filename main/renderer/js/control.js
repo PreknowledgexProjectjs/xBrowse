@@ -174,6 +174,10 @@ function Control() {
     action.sendNewTab();
   };
 
+  const openSettings = () => {
+    ipcRenderer.send('open_settings');
+  };
+
   const switchTab = id => {
     action.sendSwitchTab(id);
   };
@@ -262,7 +266,18 @@ function Control() {
     id: "login_logo"
   }), /*#__PURE__*/_react.default.createElement("ls", {
     className: "user_name"
-  }, "  ")))))));
+  }, "  ")), /*#__PURE__*/_react.default.createElement("span", {
+    type: "plus",
+    className: "plusic",
+    style: {
+      marginLeft: 10
+    },
+    onClick: openSettings
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: "../../in_app_icons/cog.png",
+    width: "16",
+    alt: "icon"
+  })))))));
 } // eslint-disable-next-line no-undef
 
 

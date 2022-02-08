@@ -140,6 +140,10 @@ function Control() {
   const newTab = () => {
     action.sendNewTab();
   };
+  const openSettings = () => {
+   
+   ipcRenderer.send('open_settings');
+  };
   const switchTab = id => {
     action.sendSwitchTab(id);
   };
@@ -217,6 +221,9 @@ function Control() {
                <img src="" id="login_logo"/> 
                <ls className="user_name">  </ls>
               </div>
+              <span type="plus" className="plusic" style={{ marginLeft: 10 }} onClick={openSettings}>
+                <img src={"../../in_app_icons/cog.png"} width="16" alt="icon" />
+              </span>
             </div>
           </div>
 

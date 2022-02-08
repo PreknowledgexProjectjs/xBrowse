@@ -5,6 +5,39 @@
   <title>Settings</title>
   <link rel="stylesheet" href="./css/bsss.css" media="all">
   <link rel="stylesheet" type="text/css" href="./css/toastr.css">
+  <style type="text/css">
+    #overlay {
+      background: #ffffff;
+      color: #666666;
+      position: fixed;
+      height: 100%;
+      width: 100%;
+      z-index: 5000;
+      top: 0;
+      left: 0;
+      float: left;
+      text-align: center;
+      padding-top: 25%;
+      opacity: .80;
+    }
+    .spinner {
+        margin: 0 auto;
+        height: 64px;
+        width: 64px;
+        animation: rotate 0.8s infinite linear;
+        border: 5px solid firebrick;
+        border-right-color: transparent;
+        border-radius: 50%;
+    }
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+  </style>
 </head>
 <body>
 <div class="card">
@@ -79,16 +112,10 @@
         </div>
       </div>
     </div>
-
-    <div class="classicPannel">
-
-      <div class="mb-3">
-        <label for="useragent" class="form-label"><lang id="custom_useragent"></lang></label>
-        <input type="textarea" class="form-control" id="useragent" placeholder="Warrning : might break some websites">
-      </div>
-
-      <button onclick="save()" class="btn btn-success"><lang id="save_changes1"></lang></button>
-
+    <div id="overlay" class="classicPannel">
+        <div class="spinner"></div>
+        <br/>
+        Loading...
     </div>
   </div>
 </div>
@@ -168,6 +195,8 @@
     $(`#${index}`).html(value);
     $(`#${index}`).attr('value',index);
   });
+
+  window.location.href = "#";
 </script>
 </body>
 </html>

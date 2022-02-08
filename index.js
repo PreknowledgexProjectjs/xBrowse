@@ -461,13 +461,14 @@ class BrowserLikeWindow extends EventEmitter {
         this.setTabConfig(id, { isLoading: true });
       })
       .on('did-fail-load', (event, code, desc, url, isMainFrame) => {
-        log.debug(`did-fail-loading > \n ErrorDesc : ${desc} \n ErrorCode : ${code} \n isMainFrame : ${isMainFrame}`);
-        //webContents.loadURL(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`)+`?errorDescription=${desc}&code=${code}&url=${url}`);
-        //this.setTabConfig(id, { isLoading: false });
+        log.error(`did-fail-loading > \n ErrorDesc : ${desc} \n ErrorCode : ${code} \n isMainFrame : ${isMainFrame}`);
+        webContents.loadURL(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`)+`?errorDescription=${desc}&code=${code}&url=${url}`);
+        this.setTabConfig(id, { isLoading: true });
       })
-      .on('did-start-navigation', (e, href, isInPlace, isMainFrame) => {
+      .on('did-navigate-in-page', (e, url, isInPlace, isMainFrame) => {
         if (isMainFrame) {
           const fileUrl = require('file-url');
+          var href = url;
           if(href.includes(this.options.blankPage)){
             href = "";
           }
@@ -565,17 +566,19 @@ class BrowserLikeWindow extends EventEmitter {
         this.setTabConfig(id, { isLoading: false });
       })
       .on('did-finish-load',() => {
-        webContents.insertCSS(`
-          * {
-            font-family: "Segoe UI"; 
-            font-weight: bold;
-          }
-          @font-face {
-              font-family: "Segoe UI";
-              font-weight: 300;
-              src: local("Segoe UI Semilight"), local("Segoe UI");
-          }
-        `);
+        if (url.includes(fileUrl(`${__dirname}/main/renderer/`))) {
+          webContents.insertCSS(`
+            * {
+              font-family: "Segoe UI"; 
+              font-weight: bold;
+            }
+            @font-face {
+                font-family: "Segoe UI";
+                font-weight: 300;
+                src: local("Segoe UI Semilight"), local("Segoe UI");
+            }
+          `);
+        }
       })
       .on('dom-ready', () => {
         webContents.focus();
@@ -732,8 +735,8 @@ class BrowserLikeWindow extends EventEmitter {
     }
    }
 
-   newTabMainProcess(){
-    this.newTab(this.options.blankPage, undefined, '');
+   newTabMainProcess(Newpage = this.options.blankPage){
+    this.newTab(Newpage+`?port=${this.port_to_open}&lang=${this.stringify_lang}`, undefined, '');
    }
 }
 
