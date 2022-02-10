@@ -4,7 +4,7 @@ const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow  } = require('
 //Expirmental requires ends :D
 const net = require('net');
 const fileUrl = require('file-url');
-const BrowserLikeWindow = require('../index');
+const RenderWindow = require('../index');
 const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
 const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
 const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
@@ -69,7 +69,7 @@ function createWindow() {
     guest_win = false;
   }
 
-  browser = new BrowserLikeWindow({
+  browser = new RenderWindow({
     controlHeight: 109,
     controlPanel: fileUrl(`${__dirname}/renderer/control.html`),
     startPage: new_tab_url,

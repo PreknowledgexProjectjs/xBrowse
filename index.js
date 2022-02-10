@@ -1,4 +1,4 @@
-const { BrowserWindow, BrowserView, ipcMain, app } = require('electron');
+const { BrowserWindow, BrowserView, ipcMain, app , dialog } = require('electron');
 const fileUrl = require('file-url');
 const windowStateKeeper = require('electron-window-state');
 const EventEmitter = require('events');
@@ -51,7 +51,7 @@ log.transports.console.level = false;
  * @param {function} [options.onNewWindow] - custom webContents `new-window` event handler
  * @param {boolean} [options.debug] - toggle debug
  */
-class BrowserLikeWindow extends EventEmitter {
+class RenderWindow extends EventEmitter {
   constructor(options) {
     super();
 
@@ -218,7 +218,7 @@ class BrowserLikeWindow extends EventEmitter {
         /**
          * control-ready event.
          *
-         * @event BrowserLikeWindow#control-ready
+         * @event RenderWindow#control-ready
          * @type {IpcMainEvent}
          */
         this.emit('control-ready', e);
@@ -263,7 +263,7 @@ class BrowserLikeWindow extends EventEmitter {
       .map(([name, listener]) => [
         name,
         (e, ...args) => {
-          // Support multiple BrowserLikeWindow
+          // Support multiple RenderWindow
           if (this.controlView && e.sender === this.controlView.webContents) {
             log.debug(`Trigger ${name} from ${e.sender.id}`);
             listener(e, ...args);
@@ -275,7 +275,7 @@ class BrowserLikeWindow extends EventEmitter {
     /**
      * closed event
      *
-     * @event BrowserLikeWindow#closed
+     * @event RenderWindow#closed
      */
     this.win.on('closed', () => {
       // Remember to clear all ipcMain events as ipcMain bind
@@ -540,7 +540,7 @@ class BrowserLikeWindow extends EventEmitter {
           /**
            * url-updated event.
            *
-           * @event BrowserLikeWindow#url-updated
+           * @event RenderWindow#url-updated
            * @return {BrowserView} view - current browser view
            * @return {string} href - updated url
            */
@@ -579,6 +579,12 @@ class BrowserLikeWindow extends EventEmitter {
             }
           `);
         }
+      })
+      .on('login',(event, details, authInfo, callback) => {
+        log.debug('did-login',{
+          details : details,
+          authInfo : authInfo
+        })
       })
       .on('dom-ready', () => {
         webContents.focus();
@@ -635,7 +641,7 @@ class BrowserLikeWindow extends EventEmitter {
    * @param {number} [appendTo] - add next to specified tab's id
    * @param {object} [references=this.options.viewReferences] - custom webPreferences to this tab
    *
-   * @fires BrowserLikeWindow#new-tab
+   * @fires RenderWindow#new-tab
    */
   newTab(url, appendTo, references) {
     const view = new BrowserView({
@@ -668,7 +674,7 @@ class BrowserLikeWindow extends EventEmitter {
     /**
      * new-tab event.
      *
-     * @event BrowserLikeWindow#new-tab
+     * @event RenderWindow#new-tab
      * @return {BrowserView} view - current browser view
      * @return {string} [source.openedURL] - opened with url
      * @return {BrowserView} source.lastView - previous active view
@@ -740,4 +746,4 @@ class BrowserLikeWindow extends EventEmitter {
    }
 }
 
-module.exports = BrowserLikeWindow;
+module.exports = RenderWindow;
