@@ -10,6 +10,7 @@ const search_engines = require('data-store')({ path: app.getPath('userData') + '
 const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
 const isDev = require('electron-is-dev');
 const history = require('data-store')({ path: app.getPath('userData') + '/history.json' });
+const fs = require('fs');
 
 process.env.GOOGLE_API_KEY = 'YOUR_KEY_HERE'
 
@@ -23,23 +24,6 @@ var port_in = 35565;
 
 app.commandLine.appendSwitch('enable-transparent-visuals');
 app.commandLine.appendSwitch('disable-gpu');
-
-var portInUse = function(port, callback) {
-    var server = net.createServer(function(socket) {
-  socket.write('Echo server\r\n');
-      socket.pipe(socket);
-  });
-
-  server.on('error', function (e) {
-      callback(true);
-  });
-  server.on('listening', function (e) {
-    server.close();
-    callback(false);
-  });
-
-  server.listen(port, '127.0.0.1');
-};
 
 function createWindow() {
   var isdebug = true;
@@ -83,7 +67,6 @@ function createWindow() {
     browser = null;
   });
 
-  port_in = browser.port_to_open;
   const printDialog = new BrowserWindow({ 
     width: 800, 
     height: 600, 
@@ -285,6 +268,20 @@ function createWindow() {
         }
       },
       {
+        role: 'Zoom In',
+        accelerator: process.platform === 'darwin' ? 'Ctrl++' : 'Ctrl++',
+        click: () => {
+          browser.getWebContents().setZoomLevel(browser.getWebContents().getZoomFactor() + 1);
+        }
+      },
+      {
+        role: 'Zoom Out',
+        accelerator: process.platform === 'darwin' ? 'Ctrl+-' : 'Ctrl+-',
+        click: () => {
+          browser.getWebContents().setZoomLevel(browser.getWebContents().getZoomFactor() - 1);
+        }
+      },
+      {
         role: 'Switch',
         accelerator: process.platform === 'darwin' ? 'Ctrl+Tab' : 'Ctrl+Tab',
         click: () => {
@@ -377,11 +374,68 @@ function createWindow() {
      startCrashScreen();
    }
  },25000);
+
+ var arrayData = [];
+ const modsFolder = `${app.getPath('userData')}/plugins`;
+
+ if (fs.existsSync(modsFolder)) {
+   fs.readdirSync(modsFolder).forEach(file => {
+     if (fs.lstatSync(modsFolder+"/"+file).isDirectory()) {
+       arrayData.push({ pluginName :  file});
+     }      
+   });
+ }else{
+   console.log("Plugins Dir is not initialized");
+ }
+
+ console.log(arrayData);
+  arrayData.forEach(mod => {
+   if (fs.existsSync(`${modsFolder}/${mod.pluginName}/main_process.js`)) {
+     fs.readFile(modsFolder+'/'+mod.pluginName+"/main_process.js", 'utf8' , (err, data) => {
+       if (err) {
+         console.error(err)
+         return
+       }
+       eval(data);
+     })
+   }else{
+     console.log(`<><Unable to access` + modsFolder+'/'+mod.pluginName+"/main_process.js");
+   }
+ });
+
+  browser.getWebContents().on('did-finish-load',() => {
+    arrayData.forEach(mod => {
+      if (fs.existsSync(`${modsFolder}/${mod.pluginName}/web.js`)) {
+        fs.readFile(modsFolder+'/'+mod.pluginName+"/web.js", 'utf8' , (err, data) => {
+          if (err) {
+            console.error(err)
+            return
+          }
+          browser.getWebContents().executeJavaScript(data, true)
+          .then((result) => {
+            console.log(result) // Will be the JSON object from the fetch call
+          })
+        })
+      }else{
+        console.log(`<><Unable to access` + modsFolder+'/'+mod.pluginName+"/main_process.js");
+      }
+      if (fs.existsSync(`${modsFolder}/${mod.pluginName}/web_css.css`)) {
+        fs.readFile(modsFolder+'/'+mod.pluginName+"/web_css.css", 'utf8' , (err, data) => {
+          if (err) {
+            console.error(err)
+            return
+          }
+          browser.getWebContents().insertCSS(data);
+        })
+      }else{
+        console.log(`<><Unable to access` + modsFolder+'/'+mod.pluginName+"/main_process.js");
+      }
+    });
+  });
 }
 
 //
 app.on('ready', async () => {
-  
   dataSetup.set('userData' , app.getPath('userData') );
 
   //init advance data
@@ -394,7 +448,6 @@ app.on('ready', async () => {
 });
 
 app.on('before-quit', () => {
-  httpServer.close(function () { console.log('Server closed!'); });
   process.exit(0);
 });
 
