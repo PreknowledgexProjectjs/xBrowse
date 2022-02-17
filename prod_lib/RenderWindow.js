@@ -68,7 +68,7 @@ class RenderWindow extends EventEmitter {
       this.lang = settings_data.get('default_lang');
     }
 
-    this.current_lang = require(`./main/translations/${this.lang}.json`);
+    this.current_lang = require(`../main/translations/${this.lang}.json`);
     this.stringify_lang = JSON.stringify(this.current_lang);
 
     //console.log("JSON:\n"+JSON.stringify(this.current_lang));
@@ -404,7 +404,7 @@ class RenderWindow extends EventEmitter {
       if(url.includes('px://')){
         if (this.options.guest) { return; }
         url.replace("px://", "");
-        url = fileUrl(`${__dirname}/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
+        url = fileUrl(`${this.options.dirname}/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
       }
       webContents.loadURL(url);
       return;
@@ -432,6 +432,8 @@ class RenderWindow extends EventEmitter {
         this.newTab(newUrl, id);
       }
     };
+
+    var dirName = this.options.dirname;
 
     webContents.on('new-window', this.options.onNewWindow || onNewWindow);
 
@@ -462,7 +464,7 @@ class RenderWindow extends EventEmitter {
       })
       .on('did-fail-load', (event, code, desc, url, isMainFrame) => {
         log.error(`did-fail-loading > \n ErrorDesc : ${desc} \n ErrorCode : ${code} \n isMainFrame : ${isMainFrame}`);
-        webContents.loadURL(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`)+`?errorDescription=${desc}&code=${code}&url=${url}`);
+        webContents.loadURL(fileUrl(`${dirName}/main/renderer/web_fail_code.html`)+`?errorDescription=${desc}&code=${code}&url=${url}`);
         this.setTabConfig(id, { isLoading: true });
       })
       .on('did-navigate-in-page', (e, url, isInPlace, isMainFrame) => {
@@ -473,27 +475,27 @@ class RenderWindow extends EventEmitter {
             href = "";
           }
 
-          if(href.includes(fileUrl(`${__dirname}/main/renderer/settings.html`))){
+          if(href.includes(fileUrl(`${dirName}/main/renderer/settings.html`))){
             href = "px://settings";
           }
 
-          if(href.includes(fileUrl(`${__dirname}/main/renderer/history.html`))){
+          if(href.includes(fileUrl(`${dirName}/main/renderer/history.html`))){
             href = "px://history";
           }
 
-          if(href.includes(fileUrl(`${__dirname}/main/renderer/about.html`))){
+          if(href.includes(fileUrl(`${dirName}/main/renderer/about.html`))){
             href = "px://about";
           }
 
-          if(href.includes(fileUrl(`${__dirname}/main/renderer/help.html`))){
+          if(href.includes(fileUrl(`${dirName}/main/renderer/help.html`))){
             href = "px://help";
           }
 
-          if(href.includes(fileUrl(`${__dirname}/main/renderer/web_fail_code.html`))){
+          if(href.includes(fileUrl(`${dirName}/main/renderer/web_fail_code.html`))){
             href = "px://network-error";
           }
 
-          if(href.includes(fileUrl(`${__dirname}/main/renderer/credits.html`))){
+          if(href.includes(fileUrl(`${dirName}/main/renderer/credits.html`))){
             href = "px://credits";
           }
 
@@ -511,7 +513,7 @@ class RenderWindow extends EventEmitter {
           let minutes = date_ob.getMinutes();
           let seconds = date_ob.getSeconds();
 
-          if (href.includes(fileUrl(`${__dirname}/main/renderer/`))) {
+          if (href.includes(fileUrl(`${dirName}/main/renderer/`))) {
             console.log("Not allowed to store in history");
           }else if(href == ''){
             console.log("Can't store in history");
@@ -566,7 +568,7 @@ class RenderWindow extends EventEmitter {
         this.setTabConfig(id, { isLoading: false });
       })
       .on('did-finish-load',() => {
-        if (url.includes(fileUrl(`${__dirname}/main/renderer/`))) {
+        if (url.includes(fileUrl(`${dirName}/main/renderer/`))) {
           webContents.insertCSS(`
             * {
               font-family: "Segoe UI"; 

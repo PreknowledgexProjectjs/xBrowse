@@ -6,9 +6,9 @@ var _reactDom = _interopRequireDefault(require("react-dom"));
 
 var _classnames = _interopRequireDefault(require("classnames"));
 
-var _useConnect = _interopRequireDefault(require("../../useConnect"));
+var _useConnect = _interopRequireDefault(require("../../prod_lib/useConnect"));
 
-var action = _interopRequireWildcard(require("../../control"));
+var action = _interopRequireWildcard(require("../../prod_lib/control"));
 
 var _macOs = require("react-desktop/macOs");
 

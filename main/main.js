@@ -4,7 +4,7 @@ const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow  } = require('
 //Expirmental requires ends :D
 const net = require('net');
 const fileUrl = require('file-url');
-const RenderWindow = require('../index');
+const RenderWindow = require('../prod_lib/RenderWindow');
 const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
 const search_engines = require('data-store')({ path: app.getPath('userData') + '/search_engines.json' });
 const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
@@ -61,6 +61,7 @@ function createWindow() {
     blankPage: new_tab_url,
     debug: isdebug, // will open controlPanel's devtools,
     guest: guest_win,
+    dirname: __dirname+"/../",
   });
 
   browser.on('closed', () => {
@@ -207,6 +208,10 @@ function createWindow() {
     dialog.show();
     dialog.loadURL(fileUrl(`${__dirname}/renderer/dialogs/${arg.url}`));
     dialog.setResizable(false);
+    dialog.on('blur', () => {
+      console.log("Close");
+      dialog.close();
+    })
   });
 
   if (settings_data.get('is_welcomed') == undefined) {

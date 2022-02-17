@@ -70,13 +70,13 @@
       console.log("Clicked");
       var rect = document.getElementById('chip_acc').getBoundingClientRect();
       ipcRenderer.send('view-dialog',{
-        x:rect.x,
-        y:rect.y,
-        width:50,
-        height:50,
-        transparent:false,
+        x:359,
+        y:28,
+        width:460,
+        height:460,
+        transparent:true,
         title:"boom",
-        url:"?"
+        url:"account.html"
       });
     };
   </script>
