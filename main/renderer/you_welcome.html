@@ -107,6 +107,7 @@
     				Sign in with the PxApi !
     			</div>
     			<a href="${$('#px_redir').val()}" class="btn btn-primary d-flex justify-content-center">Log in!</a>
+				<a href="#" onclick="skip_login()" class="btn btn-primary d-flex justify-content-center">Skip Log in!</a>
     			<a href="#" disabled="" class="btn btn-primary d-flex justify-content-center disabled">Log in with OneID! (Coming Soon)</a>
     		`);
 		}else if(id == 3){
@@ -147,6 +148,17 @@
 	function changeSearchEngineto(argument) {
 		ipcRenderer.send('set_search_engine',argument);
 		step(2);
+	}
+
+	function skip_login(){
+		var log = {
+			"login_id": "3",
+			"login_name": "TestAccount",
+			"login_logo": "",
+			"login_insiderUpdates": "1",
+			"login_status": "1"
+		};
+		ipcRenderer.send('complete_setup',log);
 	}
 </script>
 </body>
