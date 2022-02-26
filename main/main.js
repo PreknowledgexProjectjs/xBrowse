@@ -43,6 +43,19 @@ function createWindow() {
     }
   });
 
+  var PublicWin;
+  var pathWin = app.getPath('userData')+"/../.gloablx";
+  const global_X = require('data-store')({ path: pathWin + '/expirmental.json' });
+  var halfmoon = global_X.get('halfmoon_is_enabled');
+  var htmlLoad;
+
+  if (halfmoon == undefined) {
+    global_X.set('halfmoon_is_enabled',false);
+    htmlLoad = fileUrl(`${__dirname}/renderer/control.html`);
+  }else if (halfmoon == true) {
+    htmlLoad = fileUrl(`${__dirname}/renderer/half_moonbeta/control.html`);
+  }
+
   var guest_win = false;
   var new_tab_url = fileUrl(`${__dirname}/renderer/new-tab.html`);
 
@@ -55,7 +68,7 @@ function createWindow() {
 
   browser = new RenderWindow({
     controlHeight: 109,
-    controlPanel: fileUrl(`${__dirname}/renderer/control.html`),
+    controlPanel: htmlLoad,
     startPage: new_tab_url,
     blankTitle: 'New tab',
     blankPage: new_tab_url,
@@ -181,7 +194,11 @@ function createWindow() {
   });
 
   ipcMain.on('open_settings', (event) => {
-    browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/settings.html`));
+    if (halfmoon == undefined) {
+      browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/settings.html`));
+    }else if (halfmoon == true) {
+      browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/half_moonbeta/settings.html`));
+    }
   });
 
   ipcMain.on('execute_code', (event,code) => {

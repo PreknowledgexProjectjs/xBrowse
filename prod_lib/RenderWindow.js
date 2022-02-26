@@ -7,6 +7,19 @@ const log = require('electron-log');
 log.transports.file.level = false;
 log.transports.console.level = false;
 
+var PublicWin;
+var pathWin = app.getPath('userData')+"/../.gloablx";
+const global_X = require('data-store')({ path: pathWin + '/expirmental.json' });
+var halfmoon = global_X.get('halfmoon_is_enabled');
+var htmlLoad;
+
+if (halfmoon == undefined) {
+  global_X.set('halfmoon_is_enabled',false);
+  htmlLoad = null;
+}else if (halfmoon == true) {
+  htmlLoad = "moon"
+}
+
 /**
  * @typedef {number} TabID
  * @description BrowserView's id as tab id
@@ -401,12 +414,21 @@ class RenderWindow extends EventEmitter {
     }
     const MARKS = '__IS_INITIALIZED__';
     if (webContents[MARKS]) {
-      if(url.includes('px://')){
-        if (this.options.guest) { return; }
-        url.replace("px://", "");
-        url = fileUrl(`${this.options.dirname}/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
+      if (htmlLoad == null) {
+        if(url.includes('px://')){
+          if (this.options.guest) { return; }
+          url.replace("px://", "");
+          url = fileUrl(`${this.options.dirname}/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
+        }
+        webContents.loadURL(url);
+      }else if(htmlLoad == "moon") {
+        if(url.includes('px://')){
+          if (this.options.guest) { return; }
+          url.replace("px://", "");
+          url = fileUrl(`${this.options.dirname}/main/renderer/half_moonbeta/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
+        }
+        webContents.loadURL(url);
       }
-      webContents.loadURL(url);
       return;
     }
 
@@ -475,6 +497,12 @@ class RenderWindow extends EventEmitter {
             href = "";
           }
 
+          // if (href.includes(fileUrl(`${dirName}/main/renderer/half_moonbeta/`))) {
+          //   var href2 = href.replace(fileUrl(`${dirName}/main/renderer/half_moonbeta/`), "");
+          //   href2 = "px://"+href2.replace(".html","");
+          //   href = href2.replace(`?port=${this.port_to_open}&lang=${this.stringify_lang}`,"");
+          // }
+
           if(href.includes(fileUrl(`${dirName}/main/renderer/settings.html`))){
             href = "px://settings";
           }
@@ -499,6 +527,30 @@ class RenderWindow extends EventEmitter {
             href = "px://credits";
           }
 
+          if(href.includes(fileUrl(`${dirName}/main/renderer/half_moonbeta/settings.html`))){
+            href = "px://settings";
+          }
+
+          if(href.includes(fileUrl(`${dirName}/main/renderer/half_moonbeta/history.html`))){
+            href = "px://history";
+          }
+
+          if(href.includes(fileUrl(`${dirName}/main/renderer/half_moonbeta/about.html`))){
+            href = "px://about";
+          }
+
+          if(href.includes(fileUrl(`${dirName}/main/renderer/half_moonbeta/help.html`))){
+            href = "px://help";
+          }
+
+          if(href.includes(fileUrl(`${dirName}/main/renderer/half_moonbeta/web_fail_code.html`))){
+            href = "px://network-error";
+          }
+
+          if(href.includes(fileUrl(`${dirName}/main/renderer/half_moonbeta/credits.html`))){
+            href = "px://credits";
+          }
+
           log.debug('did-start-navigation > set url address', {
             href,
             isInPlace,
@@ -519,6 +571,8 @@ class RenderWindow extends EventEmitter {
             console.log("Can't store in history");
           }else if (href.includes('px://')) {
             console.log("Not allowed to store in history");
+          }else if (href.includes(fileUrl(`${dirName}/main/renderer/half_moonbeta`))) {
+            console.log("Not allowed to store in history(Beta)");
           }else if(this.options.guest){
             console.log("Not allowed to store history");
           }else{
