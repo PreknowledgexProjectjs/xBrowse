@@ -71,6 +71,7 @@ function createWindow() {
       new_tab_url2 = value;
       
     }else{
+      if (value.endsWith(".exe")) return;
       new_tab_url2 = `${search_engines.get(settings_data.get('default_search'))}${value}`;
       
     }
