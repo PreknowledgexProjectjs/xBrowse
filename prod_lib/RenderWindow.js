@@ -414,14 +414,14 @@ class RenderWindow extends EventEmitter {
     }
     const MARKS = '__IS_INITIALIZED__';
     if (webContents[MARKS]) {
-      if (htmlLoad == null) {
+      if (htmlLoad == "moon") {
         if(url.includes('px://')){
           if (this.options.guest) { return; }
           url.replace("px://", "");
           url = fileUrl(`${this.options.dirname}/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
         }
         webContents.loadURL(url);
-      }else if(htmlLoad == "moon") {
+      }else if(htmlLoad == null) {
         if(url.includes('px://')){
           if (this.options.guest) { return; }
           url.replace("px://", "");

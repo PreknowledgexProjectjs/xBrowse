@@ -1,7 +1,7 @@
 {
-  "name": "pxqbrowse-ejs",
-  "productName": "XBrowse ejsbetaxcper",
-  "version": "0.1.6",
+  "name": "xbrowseapp",
+  "productName": "XBrowseApp",
+  "version": "0.1.7-betabeta1",
   "description": "new",
   "homepage": "https://x.preknowledge.in",
   "keywords": [
@@ -11,6 +11,7 @@
     "tab",
     "addressbar"
   ],
+
   "main": "main/main.js",
   "author": "pxproj",
   "license": "MIT",
@@ -27,6 +28,9 @@
   },
   "build": {
     "appId": "px.xbrowse",
+    "nsis": {
+      "include": "src/installer.nsh"
+    },
     "mac": {
       "category": "public.app-category.utilities",
       "icon": "icons/icon.icns"
@@ -35,6 +39,18 @@
       "asar": true,
       "target": "nsis",
       "icon": "icons/icon.ico"
+    },
+    "linux":{
+      "category": "Network"
+    },
+    "fileAssociations": {
+      "ext": [
+        "xext",
+        "html",
+        "htm"
+      ],
+      "name": "PxExtLauncher",
+      "description": "Access Internet"
     }
   },
   "dependencies": {
@@ -58,6 +74,7 @@
     "@babel/core": "^7.16.7",
     "@babel/preset-env": "^7.16.8",
     "@babel/preset-react": "^7.16.7",
+    "@chakra-ui/babel-plugin": "^1.0.2",
     "cli-color": "^2.0.1",
     "electron": "^16.0.7",
     "electron-builder": "^22.14.5",

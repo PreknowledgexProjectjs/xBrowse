@@ -1,6 +1,6 @@
-const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow  } = require('electron');
+const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow, dialog } = require('electron');
 //Expirmental Reuqires
-
+require('../xapi_test.js');
 //Expirmental requires ends :D
 const net = require('net');
 const fileUrl = require('file-url');
@@ -12,9 +12,18 @@ const isDev = require('electron-is-dev');
 const history = require('data-store')({ path: app.getPath('userData') + '/history.json' });
 const fs = require('fs');
 
+var PublicWin;
+var pathWin = app.getPath('userData')+"/../.gloablx";
+const global_X = require('data-store')({ path: pathWin + '/expirmental.json' });
+const global_X_acc = require('data-store')({ path: pathWin + '/account.json' });
+var halfmoon = global_X.get('halfmoon_is_enabled');
+var htmlLoad;
+
 process.env.GOOGLE_API_KEY = 'YOUR_KEY_HERE'
 
 //console.log(history.data);
+
+console.log(process.argv);
 
 const x = require('../prod_lib/x.js');
 
@@ -37,17 +46,44 @@ function createWindow() {
 
   //console.log(process.argv.has("--isGuest"));
 
-  process.argv.forEach(function(value){
-    if (value.includes('isGuest')) {
-      isGuest = true;
+  var parsed_on = "";
+  var xisrv = "";
+  if (app.isPackaged) {
+    // workaround for missing executable argument)
+    process.argv.unshift(null)
+    process.argv.unshift(process.cwd())
+  }
+  // parameters is now an array containing any files/folders that your OS will pass to your application
+  const parameters = process.argv.slice(2)
+  parameters.forEach(function(value){
+    if (value.endsWith('.xext')) {
+      parsed_on = value;
+      xisrv = true;
     }
   });
-
-  var PublicWin;
-  var pathWin = app.getPath('userData')+"/../.gloablx";
-  const global_X = require('data-store')({ path: pathWin + '/expirmental.json' });
-  var halfmoon = global_X.get('halfmoon_is_enabled');
-  var htmlLoad;
+  var setData_of;
+  if (xisrv == true) {
+    fs.readFile(parsed_on, 'utf8' , (err, data) => {
+       if (err) {
+         console.error(err)
+         return
+       }
+       setData_of = JSON.parse(data);
+    })
+    const xisrv = new BrowserWindow(
+      { width: 1070, height: 600, 
+        webPreferences:{
+          contextIsolation:false,
+          nodeIntegration:true, 
+        } 
+      }
+    );
+    xisrv.loadURL(fileUrl(`${__dirname}/renderer/xisrv.html`));
+    ipcMain.on('get_info',(event) => {
+      event.reply('get_info',setData_of);
+    })
+    return;
+  }
 
   if (halfmoon == undefined) {
     global_X.set('halfmoon_is_enabled',false);
@@ -55,6 +91,12 @@ function createWindow() {
   }else if (halfmoon == true) {
     htmlLoad = fileUrl(`${__dirname}/renderer/half_moonbeta/control.html`);
   }
+  else if (halfmoon == false) {
+    htmlLoad = fileUrl(`${__dirname}/renderer/control.html`);
+  }
+
+
+  console.log("Is it Open ? : "+htmlLoad);
 
   var guest_win = false;
   var new_tab_url = fileUrl(`${__dirname}/renderer/new-tab.html`);
@@ -76,6 +118,11 @@ function createWindow() {
     guest: guest_win,
     dirname: __dirname+"/../",
   });
+  const window = BrowserWindow.getFocusedWindow();
+  dialog.showMessageBox(window,{
+    title:"Debugging",
+    message:JSON.stringify(parameters),
+  })
 
   browser.on('closed', () => {
     browser = null;
@@ -133,6 +180,10 @@ function createWindow() {
          event.reply('user_get_info',settings_data.get('user_info.login_image'));
       });
     });
+
+    global_X_acc.set('account_id',settings_data.get('user_info.login_id'));
+    global_X_acc.set('account_name',settings_data.get('user_info.login_name'));
+    global_X_acc.set('account_ico',settings_data.get('user_info.login_image'));
 
     require('axios').get(`https://x.preknowledge.in/Api/get_user_data/${settings_data.get('user_info.login_id')}`)
     .then(function (response) {
@@ -194,8 +245,8 @@ function createWindow() {
   });
 
   ipcMain.on('open_settings', (event) => {
-    if (halfmoon == undefined) {
-      browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/settings.html`));
+    if (halfmoon == false) {
+      browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/half_moonbeta/settings.html`));
     }else if (halfmoon == true) {
       browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/half_moonbeta/settings.html`));
     }
@@ -375,27 +426,29 @@ function createWindow() {
     }, false);
 
   });
-  const crsh = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: true , show:false, });
+  const crsh = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: false , show:false, });
   crsh.loadURL(fileUrl(`${__dirname}/renderer/crashFailure.html`))
   if (isDev) {
     crsh.webContents.openDevTools({ mode:"detach" });
   }
   function startCrashScreen(){
     crsh.show();
+    browser.win.hide();
     setTimeout(function(){
       crsh.hide();
     },55000);
   }
   crsh.setAlwaysOnTop(true, 'screen');
-  crsh.setMinimizable(false);
+  crsh.setMinimizable(true);
   ipcMain.on('loaded_yes',(event) => {
     crsh.close();
   });
  setTimeout(function(){
    if (browser.isAppStarted == false) {
      startCrashScreen();
+     crsh.loadURL(fileUrl(`${__dirname}/renderer/crashFailure.html?whathappend=I didnt reported on time`))
    }
- },25000);
+ },19323);
 
  var arrayData = [];
  const modsFolder = `${app.getPath('userData')}/plugins`;
