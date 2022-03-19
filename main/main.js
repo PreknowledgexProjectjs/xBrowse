@@ -11,7 +11,7 @@ const dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json
 const isDev = require('electron-is-dev');
 const history = require('data-store')({ path: app.getPath('userData') + '/history.json' });
 const fs = require('fs');
-
+const validUrl = require('../prod_lib/isUrl.js');
 var PublicWin;
 var pathWin = app.getPath('userData')+"/../.gloablx";
 const global_X = require('data-store')({ path: pathWin + '/expirmental.json' });
@@ -28,6 +28,7 @@ console.log(process.argv);
 const x = require('../prod_lib/x.js');
 
 let browser;
+var setBrowser;
 
 var port_in = 35565;
 
@@ -41,7 +42,8 @@ function createWindow() {
   }else {
     isdebug = false;
   }
-
+  var new_tab_url = fileUrl(`${__dirname}/renderer/new-tab.html`);
+  var new_tab_url2 = fileUrl(`${__dirname}/renderer/new-tab.html`);
   var isGuest = app.commandLine.hasSwitch("isGuest");
 
   //console.log(process.argv.has("--isGuest"));
@@ -56,11 +58,25 @@ function createWindow() {
   // parameters is now an array containing any files/folders that your OS will pass to your application
   const parameters = process.argv.slice(2)
   parameters.forEach(function(value){
+    if (value.includes(process.cwd)) { parameters.unshift(value); }
+    //if (value.startsWith("--")) { parameters.unshift(value); }
     if (value.endsWith('.xext')) {
       parsed_on = value;
       xisrv = true;
     }
+    if(validUrl.isUri(value)){
+      // setTimeout(function(){
+      //   setBrowser.newTabMainProcess(value);
+      // },200);
+      new_tab_url2 = value;
+      
+    }else{
+      new_tab_url2 = `${search_engines.get(settings_data.get('default_search'))}${value}`;
+      
+    }
+
   });
+  console.log(parameters);
   var setData_of;
   if (xisrv == true) {
     fs.readFile(parsed_on, 'utf8' , (err, data) => {
@@ -99,7 +115,7 @@ function createWindow() {
   console.log("Is it Open ? : "+htmlLoad);
 
   var guest_win = false;
-  var new_tab_url = fileUrl(`${__dirname}/renderer/new-tab.html`);
+  
 
   if (isGuest) {
     new_tab_url = fileUrl(`${__dirname}/renderer/in-guest.html`);
@@ -111,13 +127,16 @@ function createWindow() {
   browser = new RenderWindow({
     controlHeight: 109,
     controlPanel: htmlLoad,
-    startPage: new_tab_url,
+    startPage: new_tab_url2,
     blankTitle: 'New tab',
     blankPage: new_tab_url,
     debug: isdebug, // will open controlPanel's devtools,
     guest: guest_win,
     dirname: __dirname+"/../",
   });
+
+  setBrowser = browser;
+
   const window = BrowserWindow.getFocusedWindow();
   dialog.showMessageBox(window,{
     title:"Debugging",

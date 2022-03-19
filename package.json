@@ -27,7 +27,7 @@
     "dist": "electron-builder"
   },
   "build": {
-    "appId": "px.xbrowse",
+    "appId": "p.x.browse",
     "nsis": {
       "include": "src/installer.nsh"
     },
