@@ -3,6 +3,7 @@
   "productName": "XBrowseApp",
   "version": "0.1.7-betabeta1",
   "description": "new",
+  "author": "Px Team <preknowledge@gmail.com>"
   "homepage": "https://x.preknowledge.in",
   "keywords": [
     "electron",
@@ -41,6 +42,7 @@
       "icon": "icons/icon.ico"
     },
     "linux":{
+      "maintainer": "Px Team <preknowledge@gmail.com>",
       "category": "Network"
     },
     "fileAssociations": {
