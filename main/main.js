@@ -139,10 +139,10 @@ function createWindow() {
   setBrowser = browser;
 
   const window = BrowserWindow.getFocusedWindow();
-  dialog.showMessageBox(window,{
-    title:"Debugging",
-    message:JSON.stringify(parameters),
-  })
+  // dialog.showMessageBox(window,{
+  //   title:"Debugging",
+  //   message:JSON.stringify(parameters),
+  // })
 
   browser.on('closed', () => {
     browser = null;
