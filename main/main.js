@@ -154,6 +154,7 @@ function createWindow() {
     frame : false , 
     show: false,
     transparent:true, 
+    focusable:false,
     skipTaskbar: true,
     webPreferences: {
       contextIsolation:false,
@@ -286,6 +287,7 @@ function createWindow() {
       frame : false, 
       transparent:arg.transparent, 
       skipTaskbar: true, 
+      focusable:false,
       title: arg.title,
       webPreferences: {
         contextIsolation:false,
@@ -447,7 +449,7 @@ function createWindow() {
     }, false);
 
   });
-  const crsh = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: false , show:false, });
+  const crsh = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: false , focusable:false, show:false, });
   crsh.loadURL(fileUrl(`${__dirname}/renderer/crashFailure.html`))
   if (isDev) {
     crsh.webContents.openDevTools({ mode:"detach" });
