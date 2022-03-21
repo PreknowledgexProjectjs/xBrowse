@@ -162,6 +162,7 @@ function createWindow() {
   });
 
   printDialog.maximize();
+  printDialog.hide();
 
   ipcMain.on('cancel-print', (event) => {
     printDialog.hide();
