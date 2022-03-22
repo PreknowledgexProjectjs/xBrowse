@@ -41,16 +41,34 @@
       "target": "nsis",
       "icon": "icons/icon.ico"
     },
-   
-    "fileAssociations": {
-      "ext": [
-        "xext",
-        "html",
-        "htm"
-      ],
-      "name": "PxExtLauncher",
-      "description": "Access Internet"
-    }
+    "linux": {
+      "category": "Network",
+      "maintainer": "Px Team <preknowledge@gmail.com>",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "fileAssociations": [
+      {
+        "name": "Document",
+        "description": "xBrowse",
+        "role": "Viewer",
+        "ext": "html"
+      },
+      {
+        "name": "XExtension",
+        "description": "xBrowse",
+        "role": "Viewer",
+        "ext": "xext"
+      }
+    ]
   },
   "dependencies": {
     "axios": "^0.25.0",
