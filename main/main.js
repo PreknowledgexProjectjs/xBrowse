@@ -65,15 +65,13 @@ function createWindow() {
       xisrv = true;
     }
     if(validUrl.isUri(value)){
-      // setTimeout(function(){
-      //   setBrowser.newTabMainProcess(value);
-      // },200);
       new_tab_url2 = value;
-      
     }else{
       if (value.endsWith(".exe")) return;
+      if (value.endsWith(".AppImage")) return;
+      if (value.startsWith("/opt")) return;
+      if (value.startsWith("/snap")) return;
       new_tab_url2 = `${search_engines.get(settings_data.get('default_search'))}${value}`;
-      
     }
 
   });
@@ -147,26 +145,34 @@ function createWindow() {
   browser.on('closed', () => {
     browser = null;
   });
+  var diag_print;
+  function start_print_diag(){
+    const printDialog = new BrowserWindow({ 
+      width: 800, 
+      height: 600, 
+      frame : false , 
+      show: false,
+      transparent:true, 
+      focusable:false,
+      skipTaskbar: true,
+      webPreferences: {
+        contextIsolation:false,
+        nodeIntegration:true,
+      }
+    });
+    diag_print = printDialog;
+    printDialog.maximize();
+    printDialog.show();
 
-  const printDialog = new BrowserWindow({ 
-    width: 800, 
-    height: 600, 
-    frame : false , 
-    show: false,
-    transparent:true, 
-    focusable:false,
-    skipTaskbar: true,
-    webPreferences: {
-      contextIsolation:false,
-      nodeIntegration:true,
+    printDialog.loadURL(fileUrl(`${__dirname}/renderer/printDialog.html`))
+
+    if (isDev) {
+      printDialog.webContents.openDevTools({ mode:"detach" });
     }
-  });
-
-  printDialog.maximize();
-  printDialog.hide();
+  }
 
   ipcMain.on('cancel-print', (event) => {
-    printDialog.hide();
+    diag_print.close();
   });
 
   ipcMain.on('close-app',(event) => {
@@ -177,18 +183,14 @@ function createWindow() {
     browser.win.isMinimized() ? browser.win.restore() : browser.win.minimize()
   });
 
-  printDialog.loadURL(fileUrl(`${__dirname}/renderer/printDialog.html`))
-
-  if (isDev) {
-    printDialog.webContents.openDevTools({ mode:"detach" });
-  }
+  
 
   var menu = new Menu();
 
   //console.log(printDialog.webContents.getPrinters());
 
   ipcMain.on('get-printers', (event) => {
-    event.reply('print-list',printDialog.webContents.getPrinters());
+    event.reply('print-list',diag_print.webContents.getPrinters());
   });
 
   if (settings_data.get('user_info.login_id') !== undefined) {
@@ -248,6 +250,7 @@ function createWindow() {
 
   require('axios').get(`https://xbrowse-update-server.preknowledgeweb.repl.co/?version=${require('../package.json').version}`)
     .then(function (response) {
+      if (settings_data.get('is_welcomed') == undefined) return;
       if (response.data.is_updated == false) {
         browser.win.hide();
         startWelcomeScreen(`?error=update&message=${response.data.change_log}`);
@@ -314,11 +317,11 @@ function createWindow() {
     browser.win.hide();
     //we gonna /summon xbrowse:welcome_screen
     const xbrowse_welcome_screen = new BrowserWindow({ 
-      width: 400, 
-      height: 500, 
+      width: 650, 
+      height: 400, 
       frame : false,
       show: true,
-      title: "Well hello again Friend i'm xBrowse",
+      title: "xbrowse-welcome-screen",
       webPreferences: {
         contextIsolation:false,
         nodeIntegration:true,
@@ -353,7 +356,7 @@ function createWindow() {
         role: 'Print',
         accelerator: process.platform === 'darwin' ? 'Ctrl+P' : 'Ctrl+P',
         click: () => {
-         printDialog.show();
+         start_print_diag();
         }
       },
       {
