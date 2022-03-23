@@ -147,6 +147,7 @@ function Control() {
   const switchTab = id => {
     action.sendSwitchTab(id);
   };
+  
 
   return (
     <div>

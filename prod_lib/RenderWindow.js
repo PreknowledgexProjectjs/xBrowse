@@ -20,6 +20,17 @@ if (halfmoon == undefined) {
   htmlLoad = "moon"
 }
 
+function toBase64(url,callback){
+  var request = require('request').defaults({ encoding: null });
+  if (url.startsWith("data:")) callback(url);
+  if (url.startsWith("file:")) callback(url);
+  request.get(url, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+          data = "data:" + response.headers["content-type"] + ";base64," + Buffer.from(body).toString('base64');
+          callback(data);
+      }
+  });
+}
 /**
  * @typedef {number} TabID
  * @description BrowserView's id as tab id
@@ -613,8 +624,13 @@ class RenderWindow extends EventEmitter {
         this.setTabConfig(id, { title });
       })
       .on('page-favicon-updated', (e, favicons) => {
+        var datal = favicons[0];
         log.debug('page-favicon-updated', favicons);
-        this.setTabConfig(id, { favicon: favicons[0] });
+        toBase64(favicons[0],function(data){
+          log.debug('set-favicon-base64',data);
+          datal =data;
+        })
+        this.setTabConfig(id, { favicon: datal });
       })
       .on('did-stop-loading', () => {
 

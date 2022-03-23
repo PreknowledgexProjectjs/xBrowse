@@ -3,7 +3,7 @@
   "productName": "XBrowseApp",
   "version": "0.1.7-betabeta1",
   "description": "new",
-  "author": "Px Team <preknowledge@gmail.com>",
+  "author": "pxproj",
   "homepage": "https://x.preknowledge.in",
   "keywords": [
     "electron",
@@ -12,9 +12,7 @@
     "tab",
     "addressbar"
   ],
-
   "main": "main/main.js",
-  "author": "pxproj",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -47,11 +45,15 @@
       "target": [
         {
           "target": "AppImage",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         {
           "target": "deb",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
@@ -84,6 +86,7 @@
     "react-desktop": "^0.3.9",
     "react-dom": "^16.8.6",
     "react-loading-icons": "^1.0.8",
+    "request": "^2.88.2",
     "socket.io": "^4.4.1"
   },
   "devDependencies": {
