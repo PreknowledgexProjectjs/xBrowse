@@ -625,12 +625,14 @@ class RenderWindow extends EventEmitter {
       })
       .on('page-favicon-updated', (e, favicons) => {
         var datal = favicons[0];
+        var mthis = this;
         log.debug('page-favicon-updated', favicons);
         toBase64(favicons[0],function(data){
-          log.debug('set-favicon-base64',data);
+          //l//og.debug('set-favicon-base64',data);
           datal =data;
+          mthis.setTabConfig(id, { favicon: data });
         })
-        this.setTabConfig(id, { favicon: datal });
+        
       })
       .on('did-stop-loading', () => {
 

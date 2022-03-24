@@ -138,6 +138,14 @@ function createWindow() {
 
   setBrowser = browser;
 
+  browserWindow.webContents.session.webRequest.onBeforeSendHeaders(
+    filter,
+    (details, callback) => {
+      details.requestHeaders.Origin = `http://example.com/*`
+      callback({ requestHeaders: details.requestHeaders })
+    }
+  )
+
   const window = BrowserWindow.getFocusedWindow();
   // dialog.showMessageBox(window,{
   //   title:"Debugging",
