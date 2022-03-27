@@ -1,5 +1,5 @@
-# XBrowse Upcoming
-## XBrowse's First Beta is coming this year
+# xBrowse Upcoming
+## https://xbrowse.preknowledge.repl.co/ For Downloading Beta Release
 
 ### If you want early build or want to compile here are the steps
 
@@ -30,7 +30,7 @@ Or, with *Yarn*:
 ```sh
 yarn start
 ```
-#### Step 3 : Run it (2nd way typing rs in cmd to restart process & compile jsx)
+#### Step 3 (2nd way to compile) : Run it (typing rs in cmd to restart process & compile jsx)
 with *Yarn*:
 ```sh
 yarn runjs
