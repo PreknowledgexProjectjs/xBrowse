@@ -27,7 +27,7 @@
     </div>
   </div>
 </div>
-<div class="container">
+<!-- <div class="container">
   <div class="row">
     <div class="col-sm-5">
       Column
@@ -36,18 +36,30 @@
       <div class="card-body" style="height: 400px; overflow: auto;">
   	
 	    <h5 class="card-title">Hey There! Welcome to XBrowse</h5>
-	    <p class="card-text">
-	    	Its time to have a better, faster, cleaner browsing experience with XBrowse! before we can get started we need to collect some information like where we will install XBrowse and then you can sign in to your  XBrowse account! If you do not have a XBrowse account you can create a account via (https://x.preknowledge.in/Api/register) 
-
-	    	<h3>Let's go??</h3>
-	    </p>
-	    <a href="#" onclick="step(1)" class="btn btn-primary d-flex justify-content-center">Let's Go!</a>
+	    
 	  </div>
     </div>
   </div>
 </div>
 <div class="card d-flex justify-content-center">
   
+</div> -->
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <img src="./img_stps/Welcome/1.jpg" id="example" style="margin-top:156px;">
+    </div>
+    <div class="col" id="xisr" style="margin-top:120px; height:300px; overflow:auto;">
+					<p class="card-text">
+				  	Hello Welcome to xBrowse <br/>
+
+				  	Its , Light Weight Browse Built in top of nodejs and electronjs and bit of react <br/>
+				  	We Hope you like our Browse :)
+				  <h3>Let's go??</h3>
+				  </p>
+				  <a href="#" onclick="step(1)" class="btn btn-primary d-flex justify-content-center">Let's Go!</a>
+    </div>
+  </div>
 </div>
 <script type="text/javascript">
 	const { ipcRenderer } = require('electron');
@@ -61,6 +73,7 @@
 	})
 
 	var co_data;
+	var s_back;
 
 	if(url.searchParams.get("error") == 'true'){
 		step(5);
@@ -80,11 +93,23 @@
 		},200);
 	}
 
+	function go_back(){
+		step(s_back);
+	}
+
 	function step(id){
+		s_back = Math.abs(id - 1);
 		$('.card').hide();
 		$('.overlay').show();
 		if (id == 1) {
-			$('.card-body').html(`
+				imagebyimage(
+					6,
+					"#example",
+					100,
+					"./img_stps/Search/",
+					false
+				);
+			$('#xisr').html(`
 				<h5 class="card-title">Default Search Engine?</h5>
 				<p class="card-text">
     				Which will be your default search engine?
@@ -107,7 +132,14 @@
                	</div>
 			`);
 		}else if(id == 2){
-			$('.card-body').html(`
+			imagebyimage(
+				6,
+				"#example",
+				100,
+				"./img_stps/Login/",
+				false
+			);
+			$('#xisr').html(`
 				
 					<h5 class="card-title">Sign-in with pxaccount</h5>
 					<p class="card-text">
@@ -121,7 +153,7 @@
     			<a href="#" disabled="" class="btn btn-primary d-flex justify-content-center disabled">Log in with OneID! (Coming Soon)</a>
     		`);
 		}else if(id == 3){
-			$('.card-body').html(`
+			$('#xisr').html(`
 				<div class="row">
 				    <div class="col-4 mx-auto text-center">
 				        <img class="mx-auto d-block" src="" id="login_logo" style="width:90px; height:80px; border-radius:20%;">  
@@ -134,13 +166,13 @@
 			ipcRenderer.send('complete_setup',co_data);
 		}else if(id ==5){
 
-			$('.card-body').html(`
+			$('#xisr').html(`
 				<h3 class="card-title">Something went wrong</h5>
 				<h5 class="card-title" id="waiter">Loading.....</h5>
 			`);
 		}
 		else if(id ==6){
-			$('.card-body').html(`
+			$('#xisr').html(`
 				<h3 class="card-title">Update Available</h5>
 				<h5 class="card-title" id="waiter">Loading.....</h5>
 				<p class="text text-danger">Join Discord server for getting Updates : discord.gg/qAuFBR7TUn</p>
@@ -170,6 +202,31 @@
 		};
 		ipcRenderer.send('complete_setup',log);
 	}
+
+	//( ImageByImage Main )//
+	function imagebyimage(total_steps = 1 , id = 'img' , delay = 5000 , dir = "/./", repeat = false){
+		var in_step = 0;
+		var interval_sec = setInterval(function(){
+			in_step = in_step + 1;
+
+			if(in_step == total_steps){ 
+				if (repeat == true) {
+					in_step = 0;
+				}else{
+					clearInterval(interval_sec); return;
+				}
+			};
+			if(in_step == 0) return;
+			$(id).attr('src',`${dir}${in_step}.jpg`);
+		},delay);
+	}
+	imagebyimage(
+		6,
+		"#example",
+		100,
+		"./img_stps/Welcome/",
+		false
+	);
 </script>
 </body>
 </html>

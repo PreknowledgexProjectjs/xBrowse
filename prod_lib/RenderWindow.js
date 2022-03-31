@@ -21,15 +21,19 @@ if (halfmoon == undefined) {
 }
 
 function toBase64(url,callback){
-  var request = require('request').defaults({ encoding: null });
-  if (url.startsWith("data:")) callback(url);
-  if (url.startsWith("file:")) callback(url);
-  request.get(url, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-          data = "data:" + response.headers["content-type"] + ";base64," + Buffer.from(body).toString('base64');
-          callback(data);
-      }
-  });
+  try{
+    var request = require('request').defaults({ encoding: null });
+    if (url.startsWith("data:")) callback(url);
+    if (url.startsWith("file:")) callback(url);
+    request.get(url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            data = "data:" + response.headers["content-type"] + ";base64," + Buffer.from(body).toString('base64');
+            callback(data);
+        }
+    });
+  }catch(e){
+    callback("");
+  }
 }
 /**
  * @typedef {number} TabID
@@ -684,7 +688,7 @@ class RenderWindow extends EventEmitter {
       .executeJavaScript('localStorage.user_agent', true)
       .then(result => {
         if (result == undefined) {
-          webContents.setUserAgent(`Mozilla/5.0 (Windows NT ${require('os').release()}; Win64; ${require('os').arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36`)
+          webContents.setUserAgent(`Mozilla/5.0 (Windows NT ${require('os').release()}; Win64; ${require('os').arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.56 Safari/537.36`)
         }else{
           webContents.setUserAgent(result);
         }
