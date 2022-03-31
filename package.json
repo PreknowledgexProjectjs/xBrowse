@@ -1,7 +1,7 @@
 {
   "name": "xbrowseapp",
   "productName": "XBrowseApp",
-  "version": "0.1.7-betabeta1",
+  "version": "0.1.9-beta1",
   "description": "new",
   "author": "pxproj",
   "homepage": "https://x.preknowledge.in",
@@ -87,6 +87,7 @@
     "react-dom": "^16.8.6",
     "react-loading-icons": "^1.0.8",
     "request": "^2.88.2",
+    "request-progress": "^3.0.0",
     "socket.io": "^4.4.1"
   },
   "devDependencies": {
@@ -96,7 +97,7 @@
     "@babel/preset-react": "^7.16.7",
     "@chakra-ui/babel-plugin": "^1.0.2",
     "cli-color": "^2.0.1",
-    "electron": "^18.0.1",
+    "electron": "16.0.2",
     "electron-builder": "^22.14.13",
     "nodemon": "^2.0.15"
   }

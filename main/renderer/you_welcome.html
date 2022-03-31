@@ -103,7 +103,7 @@
 		$('.overlay').show();
 		if (id == 1) {
 				imagebyimage(
-					6,
+					7,
 					"#example",
 					100,
 					"./img_stps/Search/",
@@ -133,7 +133,7 @@
 			`);
 		}else if(id == 2){
 			imagebyimage(
-				6,
+				8,
 				"#example",
 				100,
 				"./img_stps/Login/",
@@ -153,6 +153,13 @@
     			<a href="#" disabled="" class="btn btn-primary d-flex justify-content-center disabled">Log in with OneID! (Coming Soon)</a>
     		`);
 		}else if(id == 3){
+			imagebyimage(
+				9,
+				"#example",
+				100,
+				"./img_stps/AlmostThere/",
+				false
+			);
 			$('#xisr').html(`
 				<div class="row">
 				    <div class="col-4 mx-auto text-center">
@@ -163,15 +170,38 @@
 				<a href="#" class="btn btn-primary d-flex justify-content-center" onclick="step(4)">Let's Go!</a>
 			`);
 		}else if(id == 4){
-			ipcRenderer.send('complete_setup',co_data);
+			imagebyimage(
+					6,
+					"#example",
+					100,
+					"./img_stps/Loading/",
+					true
+				);
+			setTimeout(() => {
+				ipcRenderer.send('complete_setup',co_data);
+			},1200);
+			
 		}else if(id ==5){
-
+			imagebyimage(
+				9,
+				"#example",
+				100,
+				"./img_stps/Error/",
+				false
+			);
 			$('#xisr').html(`
 				<h3 class="card-title">Something went wrong</h5>
 				<h5 class="card-title" id="waiter">Loading.....</h5>
 			`);
 		}
 		else if(id ==6){
+			imagebyimage(
+				5,
+				"#example",
+				100,
+				"./img_stps/Update/",
+				true
+			);
 			$('#xisr').html(`
 				<h3 class="card-title">Update Available</h5>
 				<h5 class="card-title" id="waiter">Loading.....</h5>
@@ -184,7 +214,7 @@
 		setTimeout(function(){
 			$('.card').show();
 			$('.overlay').hide();
-		},200);
+		},12);
 	}
 
 	function changeSearchEngineto(argument) {
@@ -200,7 +230,16 @@
 			"login_insiderUpdates": "1",
 			"login_status": "1"
 		};
-		ipcRenderer.send('complete_setup',log);
+		imagebyimage(
+			6,
+			"#example",
+			100,
+			"./img_stps/Loading/",
+			true
+		);
+		setTimeout(() => {
+			ipcRenderer.send('complete_setup',log);
+		},1200);
 	}
 
 	//( ImageByImage Main )//
@@ -219,6 +258,7 @@
 			if(in_step == 0) return;
 			$(id).attr('src',`${dir}${in_step}.jpg`);
 		},delay);
+		return interval_sec;
 	}
 	imagebyimage(
 		6,
