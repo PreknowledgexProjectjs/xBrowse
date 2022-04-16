@@ -1,7 +1,7 @@
 {
   "name": "xbrowseapp",
   "productName": "XBrowseApp",
-  "version": "0.1.9-beta1",
+  "version": "0.1.9-beta2",
   "description": "new",
   "author": "pxproj",
   "homepage": "https://x.preknowledge.in",
@@ -51,12 +51,6 @@
         },
         {
           "target": "deb",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
-          "target": "apk",
           "arch": [
             "x64"
           ]
