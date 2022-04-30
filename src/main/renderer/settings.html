@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings</title>
+  <link rel="stylesheet" href="./css/bsss.css" media="all">
+  <link rel="stylesheet" type="text/css" href="./css/toastr.css">
+  <style type="text/css">
+    #overlay {
+      background: #ffffff;
+      color: #666666;
+      position: fixed;
+      height: 100%;
+      width: 100%;
+      z-index: 5000;
+      top: 0;
+      left: 0;
+      float: left;
+      text-align: center;
+      padding-top: 25%;
+      opacity: .80;
+    }
+    .spinner {
+        margin: 0 auto;
+        height: 64px;
+        width: 64px;
+        animation: rotate 0.8s infinite linear;
+        border: 5px solid firebrick;
+        border-right-color: transparent;
+        border-radius: 50%;
+    }
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="card-body" style="height: 450px;">
+    <h3 align="center"><lang id="xbrowse_configuration"></lang></h3>
+    <div id="extra" style="display: none;">
+      <div class="d-flex align-items-start">
+        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">General</button>
+          <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Alerts</button>
+          <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>
+          <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
+
+          <button class="nav-link" id="v-pills-ua-tab" data-bs-toggle="pill" data-bs-target="#v-pills-ua" type="button" role="tab" aria-controls="v-pills-ua" aria-selected="false">User Agent</button>
+        </div>
+        <div class="tab-content" id="v-pills-tabContent">
+          <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+            <p> <lang id="info_se"></lang> </p>
+            <div class="container">
+                <div class="row">
+                    <div class="col col-md-4" onclick="changeSearchEngineto('google')">
+                        <div class="card h-100">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png" class="card-img-top" alt="google" style="width:100px; height: 100px;">
+                            <p class="card-body">Google</p>
+                        </div>
+                    </div>
+                    <div class="col col-md-4" onclick="changeSearchEngineto('yahoo')">
+                        <div class="card h-100">
+                          <img src="https://cdn.vox-cdn.com/thumbor/JiRzoaU535Vs9YjU6LcJSvIGFBs=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19224216/mb_yahoo_02.jpg" class="card-img-top" alt="google" style="width:100px; height: 100px;">
+                            <p class="card-body">Yahoo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+            <div class="mb-3">
+              <label for="ex_pa" class="form-label" id="show_exp_alert"></label>
+              <select class="form-control" id="ex_pa">
+                <option value="true" id="yes">  </option>
+                <option value="false" id="no">  </option>
+              </select>
+            </div>
+            <button class="btn btn-info" onclick="saveAlertChanges()"> <lang id="save_changes"></lang> </button>
+          </div>
+          <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
+          <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+            <div class="mb-3">
+                <p><lang id="change_language"></lang></p>
+              </div>
+              <div class="mb-3">
+                <label for="cL" class="form-label"><lang id="change_language"></lang>: Browser Restart required (::::!!!!)</label>
+                <select class="form-control" id="cL">
+                  <option value="en"> English (EN) </option>
+                  <option value="sp"> Spanish (SP) </option>
+                </select>
+              </div>
+
+              <button onclick="change_language()" class="btn btn-success" id="save_changes3"><lang id="save_changes"></lang></button>
+          </div>
+          <div class="tab-pane fade" id="v-pills-ua" role="tabpanel" aria-labelledby="v-pills-ua-tab">
+              <div class="mb-3">
+                <p><lang id="if_ya_ua"></lang></p>
+              </div>
+              <div class="mb-3">
+                <label for="useragent" class="form-label"><lang id="custom_useragent"></lang></label>
+                <input type="textarea" class="form-control" id="useragent" placeholder="Warrning : might break some websites">
+              </div>
+
+              <button onclick="save()" class="btn btn-success" id="save_changes2"><lang id="save_changes"></lang></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="overlay" class="classicPannel">
+        <div class="spinner"></div>
+        <br/>
+        Loading...
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="./js/ajaxjs.js"></script>
+<script type="text/javascript" src="./js/bundle.js"></script>
+<script type="text/javascript" src="./js/toastr.js"></script>
+<script src="./js/socket.io.js"></script>
+<script type="text/javascript">
+  //preload inputs
+  let url = new URL(window.location.href)
+  let params = new URLSearchParams(url.search);
+  var lang = JSON.parse(url.searchParams.get("lang"));
+  if (localStorage.user_agent == undefined) {
+    $('#useragent').val('');
+  }else{
+    $('#useragent').val(localStorage.user_agent);
+  }
+  //functions
+  function save(){
+    localStorage.setItem('user_agent',$('#useragent').val());
+    toastr.info("Setting saved. Some settings may need restart to take effect");
+  }
+
+  var socket = io.connect('http://localhost:'+params.get('port'),{secure: true,rejectUnauthorized: false});
+  socket.on('connect',function(){
+    $('#extra').show();
+    $('.classicPannel').remove();
+    var sendFy = true;
+    
+    socket.emit('code_exec',`settings_data.get("alert_exp_feature")`,"settings_alert");
+
+    socket.on('code_exec_result', function(code,page) {
+      if (sendFy == true) {
+        if (page == "settings_alert") {
+          console.log(code);
+          if (code == "true") {
+            sendFy = false;
+            socket.emit('toastR', "Warrning : Expirmental Features are Running they might gave problems If you want to disable this dialog please check Settings > Alerts");
+          }
+          if(code == "false"){
+            $('#ex_pa').find(`option[value="false"]`).prop('selected', true);
+          }
+          if(code == null){
+            sendFy = false;
+            socket.emit('toastR', "Warrning : Expirmental Features are Running they might gave problems If you want to disable this dialog please check Settings > Alerts");
+          }
+        }
+      }
+      if (page == "settingalertChange") {
+        toastr.success("Successfully Changed");
+      }
+    });
+  });
+
+  function saveAlertChanges(){
+    socket.emit('code_exec',`settings_data.set('alert_exp_feature','${$('#ex_pa option:selected').val()}')`,"settingalertChange");
+  }
+
+  function changeSearchEngineto(data){
+    toastr.success("Successfully changed default search changed to "+data);
+    socket.emit('code_exec',`settings_data.set('default_search','${data}')`,"X");
+  }
+
+  function change_language(){
+    save_language($('#cL option:selected').val());
+  }
+
+  function save_language(data){
+    toastr.success("Successfully changed default language to "+data);
+    toastr.info("Please restart your browser to apply changes");
+    socket.emit('code_exec',`settings_data.set('default_lang','${data}')`,"X");
+  }
+
+  $.each(lang, function(index, value) {
+    console.log("Index:"+index+"\nValue:"+value)
+    $(`#${index}`).html(value);
+    $(`#${index}`).attr('value',index);
+  });
+
+  window.location.href = "#";
+</script>
+</body>
+</html>

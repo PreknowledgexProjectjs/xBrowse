@@ -1,7 +1,7 @@
 {
   "name": "xbrowseapp",
   "productName": "XBrowseApp",
-  "version": "0.1.9-beta2",
+  "version": "0.1.9-beta3",
   "description": "new",
   "author": "pxproj",
   "homepage": "https://x.preknowledge.in",
@@ -12,16 +12,16 @@
     "tab",
     "addressbar"
   ],
-  "main": "main/main.js",
+  "main": "src/main/main.js",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/"
   },
   "scripts": {
-    "start:control": "npx babel src --out-dir main/renderer/js",
-    "start": "electron main/main.js --enable-transparent-visuals",
-    "runjs": "nodemon devLib/start.js --watch src",
+    "start:control": "npx babel src --out-dir src/main/renderer/js",
+    "start": "electron src/main/main.js --enable-transparent-visuals",
+    "runjs": "nodemon devLib/start.js --watch src/control.jsx",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
@@ -32,12 +32,12 @@
     },
     "mac": {
       "category": "public.app-category.utilities",
-      "icon": "icons/icon.icns"
+      "icon": "src/icons/icon.icns"
     },
     "win": {
       "asar": true,
       "target": "nsis",
-      "icon": "icons/icon.ico"
+      "icon": "src/icons/icon.ico"
     },
     "linux": {
       "category": "Network",
@@ -85,7 +85,6 @@
     "react": "^16.8.6",
     "react-desktop": "^0.3.9",
     "react-dom": "^16.8.6",
-    "react-loading-icons": "^1.0.8",
     "request": "^2.88.2",
     "request-progress": "^3.0.0",
     "socket.io": "^4.4.1"
