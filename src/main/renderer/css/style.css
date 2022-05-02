@@ -120,18 +120,19 @@ button:focus {
 /*Chips*/
 .chip {
   display: inline-block;
-  padding: 0 5px;
+  padding: 2px 5px;
   height: 30px;
+  margin-left: 24px;
   margin-top: 1px;
   font-size: 16px;
   line-height: 30px;
   border-radius: 25px;
   background-color: #f1f1f1;
 }
-
 .chip img {
   float: left;
-  margin: 0 10px 0 -25px;
+  margin-left: 24px;
+  margin: 0 3px 0 1px;
   height: 30px;
   width: 30px;
   border-radius: 50%;
@@ -218,6 +219,46 @@ button:focus {
   }
 }
 /*end container & sizes */
+/*Sidebar*/
+.side{
+  display: inline-block;
+}
+.r-side{
+  display: inline-block;
+  position: fixed;
+  margin-top: 2%;
+}
+.side ul{
+  display: block;
+  list-style: none;
+  width: 300px;
+  margin-right: 20px;
+}
+.side li{
+  padding: 15px 15px;
+  background: linear-gradient(to right, #f0f0f0 2%, #cfcfcf 100%);
+  border-radius: 20px;
+  margin-top: 5%;
+  border :1px solid #cfcfcf
+}
+.dark-mode .side ul{
+  background: #262525;
+}
+.dark-mode .side li{
+  background: linear-gradient(to right, #262525 4%,#4a4a4a 100%);
+  border: 1px solid #4a4a4a;
+}
+.dark-mode .side li:hover{
+  background: linear-gradient(to right, #262525 4%,#120000 100%);
+  border: 1px solid #4a4a4a;
+}
+.side li:hover{
+  padding: 15px 15px;
+  background: linear-gradient(to right, #e8e8e8 4%, #f5f5f5 100%);
+  border-radius: 20px;
+  border :1px solid #e6e6e6
+}
+/*Sidebar*/
 /*Alerts*/
 .alert{
   padding: 19px 12px;
@@ -356,6 +397,13 @@ ul {
   background:#f1f3f7;
   color: #4b00ff;
 }
+.dark-mode .menu > li > a {
+  color: #ffffff;
+}
+.dark-mode .menu > li > a:hover {
+  background:#383a3d;
+  color: #ffffff;
+}
 .menu > li > a > i {
   padding-right: 10px;
 }
@@ -393,10 +441,10 @@ ul {
   align-items: center;
   padding: 0 10px 0 15px;
   max-width: 185px;
-  /*border-left: 1px solid #999;*/
   cursor: default;
   transform: translateX(-100%);
   -webkit-transform: translateX(-100%);
+  margin: 5px;
   animation: slide-in 0.5s forwards;
   -webkit-animation: slide-in 0.5s forwards;
   background-color: #f1f1f1;
@@ -551,10 +599,10 @@ ul {
 /*themes*/
 
 /*xebra-default*/
-.thm1 button, .thm1 input, .thm1 select, .thm1 textarea, .thm1 .card{
-  background: linear-gradient(to right, #ff3300 0%, #ff66ff 100%);
-  border : 1px solid linear-gradient(to right, #ff3300 0%, #ff66ff 100%);
-  box-shadow: 1px 2px #ff3300;
+.thm1 button, .thm1 input, .thm1 select, .thm1 textarea, .thm1 .card, .thm1 .tab, .thm1 .menu , .thm1 a , .thm1 button, .thm1 .chip , .thm1 .action, .thm1 .address, .thm1 .bars, .thm1 .bars, .thm1 , .thm1 .plusic , .thm1 .side li ,.thm1 .side ul{
+  background: linear-gradient(to right, #d9d9d9 0%, #2e2a2a 100%);
+  border : 1px solid linear-gradient(to right, #d9d9d9 0%, #2e2a2a 100%);
+  box-shadow: 1px 2px #2e2a2a;
   color: white;
 }
 

@@ -108,7 +108,7 @@ try{
       global_X.set('halfmoon_is_enabled',false);
       htmlLoad = fileUrl(`${__dirname}/renderer/control.html`);
     }else if (halfmoon == true) {
-      htmlLoad = fileUrl(`${__dirname}/renderer/half_moonbeta/control.html`);
+      htmlLoad = fileUrl(`${__dirname}/renderer/pageViews/control.html`);
     }
     else if (halfmoon == false) {
       htmlLoad = fileUrl(`${__dirname}/renderer/control.html`);
@@ -322,9 +322,9 @@ try{
 
     ipcMain.on('open_settings', (event) => {
       if (halfmoon == false) {
-        browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/half_moonbeta/settings.html`));
+        browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/pageViews/settings.html`));
       }else if (halfmoon == true) {
-        browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/half_moonbeta/settings.html`));
+        browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/pageViews/settings.html`));
       }
     });
 
@@ -518,7 +518,7 @@ try{
     crsh.setAlwaysOnTop(true, 'screen');
     crsh.setMinimizable(true);
     ipcMain.on('loaded_yes',(event) => {
-      crsh.close();
+      //crsh.close();
     });
    setTimeout(function(){
      if (browser.isAppStarted == false) {

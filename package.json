@@ -19,11 +19,12 @@
     "url": "https://github.com/"
   },
   "scripts": {
-    "start:control": "npx babel src --out-dir src/main/renderer/js",
+    "start:control": "npx babel src/react_src --out-dir src/main/renderer/js",
     "start": "electron src/main/main.js --enable-transparent-visuals",
     "runjs": "nodemon devLib/start.js --watch src/control.jsx",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "before:commit":"del dataSetup.json && git add ."
   },
   "build": {
     "appId": "p.x.browse",

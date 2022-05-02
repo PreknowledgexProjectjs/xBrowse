@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>xBrowse</title>
+  <link rel="stylesheet" href="../css/style.css" media="all">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style type="text/css">
+    body{
+      overflow: scroll;
+    }
+  </style>
+</head>
+<body>
+  <div class="body-container">  
+    <div class="sidebar">
+      <div class="side">
+        <ul>
+          <li onclick="tabOpen('appearance')">Appearance</li>
+          <li onclick="tabOpen('about')">About</li>
+        </ul>
+      </div>
+      <div class="r-side">
+        <div id="appearance" style="display: none;">
+          <h3>Appearance</h3>
+          <div class="card" style="width:160%;">
+            
+            <div style="margin:2.3%;">
+              <div id="alerta"></div>
+              <h4 class="card-title" style="margin-top: 8px;">Color Scheme</h4>
+              <button class="button btn-success" onclick="localStorage.removeItem('theme')">Set Default</button>
+              <button class="button btn-success dark-mode" style="background:black;" onclick="setTheme('dark-mode')">Set Dark Mode</button>
+              <button class="button btn-success thm1" onclick="setTheme('1')">Set Xebra</button>
+              <div class="form-group">
+                <label for="cL" class="form-label"><lang id="change_language"></lang>: Browser Restart required (!)</label>
+                <select class="form-control" id="cL">
+                  <option value="en"> English (EN) </option>
+                  <option value="sp"> Spanish (SP) </option>
+                </select>
+              </div>
+
+              <button style="margin-top:14px;" onclick="change_language()" class="button btn-success" id="save_changes3"><lang id="save_changes"></lang></button>
+
+              <h4 class="card-title" style="margin-top: 8px;">Default Search Engine</h4>
+
+              <div class="container-card" style="margin:0;margin-right: 0; margin-left: 0;">
+                <div class="card-row row-2" onclick="changeSearchEngineto('google')">
+                  <div class="card" style="padding: 2px 5px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png" style="width:25%;height: 25%;">
+                    <h4 class="card-title">Google</h4>
+                  </div>
+                </div>
+                <div class="card-row row-2" onclick="changeSearchEngineto('yahoo')">
+                  <div class="card" style="padding: 2px 5px;">
+                    <img src="https://cdn.vox-cdn.com/thumbor/JiRzoaU535Vs9YjU6LcJSvIGFBs=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19224216/mb_yahoo_02.jpg" style="width:25%;height: 25%;">
+                    <h4 class="card-title">Yahoo</h4>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            
+          </div>
+        </div>
+        <div id="about" style="display: none; height: 500px; overflow:scroll">
+          <div class="card" style="width:100%;">
+            <div style="margin:4.3%;">
+              <div id="alerta"></div>
+              <h4 class="card-title" style="margin-top: 8px;">About</h4>
+              <p><b>XBrowse _ Beta</b></p>
+              <h4 class="card-title" style="margin-top: 8px;">Credits</h4>
+              <table>
+                <tbody>
+                  <tr>
+                    <div class="card" style="width:106%;">
+                      <img src="https://xbrowse.preknowledge.repl.co/avatars/hnb.webp" style="height:35%; width: 35%;">
+                      <label class="card-title" >⍑リʖ⚍リリ||_!¡101 <br/> Role - Project Coder</label>
+                    </div>
+                  </tr>
+                  <tr>
+                    <div class="card"style="width:106%;">
+                      <img src="https://xbrowse.preknowledge.repl.co/avatars/raj.webp" style="height:35%; width: 35%;">
+                      <label class="card-title" >Rajdeep <br/> Role - Project Co-Coder</label>
+                    </div>
+                  </tr>
+                  <tr>
+                    <div class="card"style="width:106%;">
+                      <img src="https://xbrowse.preknowledge.repl.co/avatars/pwl.webp" style="height:35%; width: 35%;">
+                      <label class="card-title" >PwL <br/> Role - Project Coder</label>
+                    </div>
+                  </tr>
+                  <tr>
+                    <div class="card"style="width:106%;">
+                      <img src="https://xbrowse.preknowledge.repl.co/avatars/luis.webp" style="height:35%; width: 35%;">
+                      <label class="card-title" >Luis Antonio Carbone <br/> Role - Suggestions</label>
+                    </div>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../js/jquery.js"></script>
+  <script type="text/javascript" src="../js/lcss.js"></script>
+  <script src="../js/socket.io.js"></script>
+  <script type="text/javascript">
+  try{
+    //preload inputs
+    var activeTab = "";
+    tabOpen("appearance");
+    function tabOpen(id){
+      $(`#${activeTab}`).hide();
+      activeTab = id;
+      $(`#${id}`).show();
+    }
+    let url = new URL(window.location.href)
+    let params = new URLSearchParams(url.search);
+    var lang = JSON.parse(url.searchParams.get("lang"));
+    if (localStorage.user_agent == undefined) {
+      $('#useragent').val('');
+    }else{
+      $('#useragent').val(localStorage.user_agent);
+    }
+    //functions
+    function save(){
+      localStorage.setItem('user_agent',$('#useragent').val());
+      //toastr.info("Setting saved. Some settings may need restart to take effect");
+      $('#alerta').html(`
+        <div class="alert alert-info" id="alert-1">
+          <h5 class="alert-title">Setting saved. Some settings may need restart to take effect</h5>
+          <button class="button btn-danger" onclick="hideAlert(1)">X</button>
+        </div>`);
+    }
+
+    var socket = io.connect('http://localhost:'+params.get('port'),{secure: true,rejectUnauthorized: false});
+    socket.on('connect',function(){
+      $('#extra').show();
+      $('.classicPannel').remove();
+      var sendFy = true;
+      
+      socket.emit('code_exec',`settings_data.get("alert_exp_feature")`,"settings_alert");
+
+      socket.on('code_exec_result', function(code,page) {
+        if (sendFy == true) {
+          if (page == "settings_alert") {
+            console.log(code);
+            if (code == "true") {
+              sendFy = false;
+              socket.emit('//toastr', "Warrning : Expirmental Features are Running they might gave problems If you want to disable this dialog please check Settings > Alerts");
+            }
+            if(code == "false"){
+              $('#ex_pa').find(`option[value="false"]`).prop('selected', true);
+            }
+            if(code == null){
+              sendFy = false;
+              socket.emit('//toastr', "Warrning : Expirmental Features are Running they might gave problems If you want to disable this dialog please check Settings > Alerts");
+            }
+          }
+        }
+        if (page == "settingalertChange") {
+          //toastr.success("Successfully Changed");
+        }
+      });
+    });
+
+    function saveAlertChanges(){
+      socket.emit('code_exec',`settings_data.set('alert_exp_feature','${$('#ex_pa option:selected').val()}')`,"settingalertChange");
+    }
+
+    function changeSearchEngineto(data){
+      //toastr.success("Successfully changed default search changed to "+data);
+      $('#alerta').html(`
+        <div class="alert alert-success" id="alert-1">
+          <h5 class="alert-title">Successfully changed default search changed to ${data}</h5>
+          <button class="button btn-danger" onclick="hideAlert(1)">X</button>
+        </div>`);
+      socket.emit('code_exec',`settings_data.set('default_search','${data}')`,"X");
+    }
+
+    function change_language(){
+      save_language($('#cL option:selected').val());
+    }
+
+    function save_language(data){
+      //toastr.success("Successfully changed default language to "+data);
+      //toastr.info("Please restart your browser to apply changes");
+      $('#alerta').html(`
+        <div class="alert alert-success" id="alert-1">
+          <h5 class="alert-title">Please restart your browser to apply changes</h5>
+          <button class="button btn-danger" onclick="hideAlert(1)">X</button>
+        </div>`);
+      socket.emit('code_exec',`settings_data.set('default_lang','${data}')`,"X");
+    }
+
+    $.each(lang, function(index, value) {
+      console.log("Index:"+index+"\nValue:"+value)
+      $(`#${index}`).html(value);
+      $(`#${index}`).attr('value',index);
+    });
+
+    window.location.href = "#";
+  }catch(e){
+    alert(e);
+  }
+  </script>
+</body>
+</html>

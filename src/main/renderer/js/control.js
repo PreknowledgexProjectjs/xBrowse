@@ -242,7 +242,7 @@ function Control() {
     className: (0, _classnames.default)('action'),
     onClick: isLoading ? action.sendStop : action.sendReload
   }, isLoading ? /*#__PURE__*/_react.default.createElement(IconClose, null) : /*#__PURE__*/_react.default.createElement(IconReload, null)), /*#__PURE__*/_react.default.createElement("div", {
-    className: "chip2"
+    className: "chip"
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: "../../icons/icon.png",
     id: "site_logo"

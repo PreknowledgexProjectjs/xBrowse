@@ -176,8 +176,8 @@ class RenderWindow extends EventEmitter {
       'y': mainWindowState.y,
       'width': mainWindowState.width,
       'height': mainWindowState.height,
-      icon:'icons/icon.ico',
-      title:"PxBrowse (Electron.js) Expirmental Build :D",
+      icon:'src/icons/icon.ico',
+      title:"xBrowse Beta",
       webPreferences: {
         contextIsolation: false,
         nodeIntegration: true,
@@ -433,14 +433,14 @@ class RenderWindow extends EventEmitter {
         if(url.includes('px://')){
           if (this.options.guest) { return; }
           url.replace("px://", "");
-          url = fileUrl(`${this.options.dirname}/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
+          url = fileUrl(`${this.options.dirname}/src/main/renderer/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
         }
         webContents.loadURL(url);
       }else if(htmlLoad == null) {
         if(url.includes('px://')){
           if (this.options.guest) { return; }
           url.replace("px://", "");
-          url = fileUrl(`${this.options.dirname}/main/renderer/half_moonbeta/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
+          url = fileUrl(`${this.options.dirname}/src/main/renderer/pageViews/${url.replace("px://", "")}.html`)+`?port=${this.port_to_open}&lang=${this.stringify_lang}`;
         }
         webContents.loadURL(url);
       }
@@ -512,8 +512,8 @@ class RenderWindow extends EventEmitter {
             href = "";
           }
 
-          // if (href.includes(fileUrl(`${dirName}/src/main/renderer/half_moonbeta/`))) {
-          //   var href2 = href.replace(fileUrl(`${dirName}/src/main/renderer/half_moonbeta/`), "");
+          // if (href.includes(fileUrl(`${dirName}/src/main/renderer/pageViews/`))) {
+          //   var href2 = href.replace(fileUrl(`${dirName}/src/main/renderer/pageViews/`), "");
           //   href2 = "px://"+href2.replace(".html","");
           //   href = href2.replace(`?port=${this.port_to_open}&lang=${this.stringify_lang}`,"");
           // }
@@ -542,27 +542,27 @@ class RenderWindow extends EventEmitter {
             href = "px://credits";
           }
 
-          if(href.includes(fileUrl(`${dirName}/src/main/renderer/half_moonbeta/settings.html`))){
+          if(href.includes(fileUrl(`${dirName}/src/main/renderer/pageViews/settings.html`))){
             href = "px://settings";
           }
 
-          if(href.includes(fileUrl(`${dirName}/src/main/renderer/half_moonbeta/history.html`))){
+          if(href.includes(fileUrl(`${dirName}/src/main/renderer/pageViews/history.html`))){
             href = "px://history";
           }
 
-          if(href.includes(fileUrl(`${dirName}/src/main/renderer/half_moonbeta/about.html`))){
+          if(href.includes(fileUrl(`${dirName}/src/main/renderer/pageViews/about.html`))){
             href = "px://about";
           }
 
-          if(href.includes(fileUrl(`${dirName}/src/main/renderer/half_moonbeta/help.html`))){
+          if(href.includes(fileUrl(`${dirName}/src/main/renderer/pageViews/help.html`))){
             href = "px://help";
           }
 
-          if(href.includes(fileUrl(`${dirName}/src/main/renderer/half_moonbeta/web_fail_code.html`))){
+          if(href.includes(fileUrl(`${dirName}/src/main/renderer/pageViews/web_fail_code.html`))){
             href = "px://network-error";
           }
 
-          if(href.includes(fileUrl(`${dirName}/src/main/renderer/half_moonbeta/credits.html`))){
+          if(href.includes(fileUrl(`${dirName}/src/main/renderer/pageViews/credits.html`))){
             href = "px://credits";
           }
 
@@ -586,7 +586,7 @@ class RenderWindow extends EventEmitter {
             console.log("Can't store in history");
           }else if (href.includes('px://')) {
             console.log("Not allowed to store in history");
-          }else if (href.includes(fileUrl(`${dirName}/src/main/renderer/half_moonbeta`))) {
+          }else if (href.includes(fileUrl(`${dirName}/src/main/renderer/pageViews`))) {
             console.log("Not allowed to store in history(Beta)");
           }else if(this.options.guest){
             console.log("Not allowed to store history");
