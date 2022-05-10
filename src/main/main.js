@@ -1,3 +1,4 @@
+console.log("Loading src.main.mainjs Please wait .........");
 const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow, dialog } = require('electron');
 //Expirmental Reuqires
 //Expirmental requires ends :D
@@ -23,9 +24,9 @@ var htmlLoad;
 
 process.env.GOOGLE_API_KEY = 'YOUR_KEY_HERE'
 try{
-  //console.log(history.data);
+  ////console.log(history.data);
 
-  console.log(process.argv);
+  //console.log(process.argv);
 
   const x = require('../prod_lib/x.js');
 
@@ -48,7 +49,7 @@ try{
     var new_tab_url2 = fileUrl(`${__dirname}/renderer/new-tab.html`);
     var isGuest = app.commandLine.hasSwitch("isGuest");
 
-    //console.log(process.argv.has("--isGuest"));
+    ////console.log(process.argv.has("--isGuest"));
 
     var parsed_on = "";
     var xisrv = "";
@@ -79,7 +80,7 @@ try{
       }
 
     });
-    console.log(parameters);
+    //console.log(parameters);
     var setData_of;
     if (xisrv == true) {
       fs.readFile(parsed_on, 'utf8' , (err, data) => {
@@ -113,9 +114,6 @@ try{
     else if (halfmoon == false) {
       htmlLoad = fileUrl(`${__dirname}/renderer/control.html`);
     }
-
-
-    console.log("Is it Open ? : "+htmlLoad);
 
     var guest_win = false;
     
@@ -199,7 +197,7 @@ try{
 
     var menu = new Menu();
 
-    //console.log(printDialog.webContents.getPrinters());
+    ////console.log(printDialog.webContents.getPrinters());
 
     ipcMain.on('get-printers', (event) => {
       event.reply('print-list',diag_print.webContents.getPrinters());
@@ -207,7 +205,6 @@ try{
 
     if (settings_data.get('user_info.login_id') !== undefined) {
       ipcMain.on('user_info', (event) => {
-        console.log("IPC:user_info");
         require('axios').get(`https://x.preknowledge.in/Api/get_user_data/${settings_data.get('user_info.login_id')}`)
         .then(function (response) {
           settings_data.set('user_info',response.data)
@@ -234,7 +231,6 @@ try{
       });
     }else{
       ipcMain.on('user_info', (event) => { 
-        console.log("IPC:user_info");
         event.reply('user_get_info',JSON.stringify({id:1}));
       });
     }
@@ -274,7 +270,7 @@ try{
           startWelcomeScreen(`?error=update&message=${response.data.change_log}`);
           if(fs.existsSync("temp_update.exe")){
             exec('temp_update.exe /S');
-            console.log("Installing update");
+            //console.log("Installing update");
             return;
           }
           progress(request(response.data.windows.windows), {
@@ -296,7 +292,7 @@ try{
               //         remaining: 81.403       // The remaining seconds to finish (3 decimals) 
               //     } 
               // } 
-              console.log('progress', state);
+              //console.log('progress', state);
           })
           .on('error', function (err) {
               // Do something with err 
@@ -354,11 +350,11 @@ try{
       dialog.loadURL(fileUrl(`${__dirname}/renderer/dialogs/${arg.url}`));
       dialog.setResizable(false);
       dialog.on('blur', () => {
-        console.log("Close");
+        //console.log("Close");
         dialog.close();
       })
     });
-    console.log(app.getPath('userData'));
+    //console.log(app.getPath('userData'));
     if (settings_data.get('is_welcomed') == undefined) {
       startWelcomeScreen();
     }
@@ -537,10 +533,10 @@ try{
        }      
      });
    }else{
-     console.log("Plugins Dir is not initialized");
+     //console.log("Plugins Dir is not initialized");
    }
 
-   console.log(arrayData);
+   //console.log(arrayData);
     arrayData.forEach(mod => {
      if (fs.existsSync(`${modsFolder}/${mod.pluginName}/main_process.js`)) {
        fs.readFile(modsFolder+'/'+mod.pluginName+"/main_process.js", 'utf8' , (err, data) => {
@@ -551,7 +547,7 @@ try{
          eval(data);
        })
      }else{
-       console.log(`<><Unable to access` + modsFolder+'/'+mod.pluginName+"/main_process.js");
+       //console.log(`<><Unable to access` + modsFolder+'/'+mod.pluginName+"/main_process.js");
      }
    });
 
@@ -565,11 +561,11 @@ try{
     //         }
     //         browser.getWebContents().executeJavaScript(data, true)
     //         .then((result) => {
-    //           console.log(result) // Will be the JSON object from the fetch call
+    //           //console.log(result) // Will be the JSON object from the fetch call
     //         })
     //       })
     //     }else{
-    //       console.log(`<><Unable to access` + modsFolder+'/'+mod.pluginName+"/main_process.js");
+    //       //console.log(`<><Unable to access` + modsFolder+'/'+mod.pluginName+"/main_process.js");
     //     }
     //     if (fs.existsSync(`${modsFolder}/${mod.pluginName}/web_css.css`)) {
     //       fs.readFile(modsFolder+'/'+mod.pluginName+"/web_css.css", 'utf8' , (err, data) => {
@@ -580,7 +576,7 @@ try{
     //         browser.getWebContents().insertCSS(data);
     //       })
     //     }else{
-    //       console.log(`<><Unable to access` + modsFolder+'/'+mod.pluginName+"/main_process.js");
+    //       //console.log(`<><Unable to access` + modsFolder+'/'+mod.pluginName+"/main_process.js");
     //     }
     //   });
     // });
@@ -622,5 +618,5 @@ try{
   });
 }catch(e){
   process.exit(1)
-  console.log(`Error Occured ${e}`);
+  //console.log(`Error Occured ${e}`);
 }

@@ -212,7 +212,10 @@ class RenderWindow extends EventEmitter {
     // BrowserView should add to window before setup
     this.win.addBrowserView(this.controlView);
     this.controlView.setBounds(this.getControlBounds());
-    this.controlView.setAutoResize({ width: true });
+    setInterval(() => {
+      this.controlView.setBounds(this.getControlBounds());
+    },1200);
+    this.controlView.setAutoResize({ width: true , horizontal: true , vertical: true });
     if (this.options.guest) { 
       this.controlView.webContents.loadURL(`${controlPanel}?port=${this.port_to_open}&lang=${this.stringify_lang}&guest=true`);
     }else{
