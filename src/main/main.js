@@ -414,10 +414,11 @@ try{
           }
         },
         {
-          role: 'Zoom In',
-          accelerator: process.platform === 'darwin' ? 'Ctrl++' : 'Ctrl++',
+          role: 'Reload',
+          accelerator: process.platform === 'darwin' ? 'Ctrl+L' : 'Ctrl+L',
           click: () => {
-            browser.getWebContents().setZoomLevel(browser.getWebContents().getZoomFactor() + 1);
+            browser.getWebContents().reload();
+            console.log("RELOADING WEBPAGE AT" + Date.now());
           }
         },
         {

@@ -3,8 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<title>Welcome!</title>
-	<link rel="stylesheet" type="text/css" href="./css/bsss.css">
-	<style type="text/css">
+	<link rel="stylesheet" href="./css/style.css" media="all">
+  <link rel="stylesheet" type="text/css" href="css/toastify.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	<style type="text/css">
 	.overlay {
 	    position: fixed;
 	    width: 100%;
@@ -44,12 +45,12 @@
 <div class="card d-flex justify-content-center">
   
 </div> -->
-<div class="container">
-  <div class="row">
-    <div class="col">
+    <div class="align-right" style="width:20%; display: inline-block;
+  position: fixed;">
       <img src="./img_stps/Welcome/1.jpg" id="example" style="margin-top:156px;">
     </div>
-    <div class="col" id="xisr" style="margin-top:120px; height:300px; overflow:auto;">
+    <div class="align-left" id="xisr" style="width:20%;margin-top:120px; height:300px; overflow:auto; display: inline-block;
+  position: fixed;">
 					<p class="card-text">
 				  	Hello Welcome to xBrowse <br/>
 
@@ -57,10 +58,10 @@
 				  	We Hope you like our Browse :)
 				  <h3>Let's go??</h3>
 				  </p>
-				  <a href="#" onclick="step(1)" class="btn btn-primary d-flex justify-content-center">Let's Go!</a>
+				  <a href="#" onclick="step(1)" class="button btn-primary d-flex justify-content-center">Let's Go!</a>
     </div>
-  </div>
-</div>
+<script src="js/jquery.js"></script>
+<script type="text/javascript" src="js/lcss.js"></script>
 <script type="text/javascript">
 	const { ipcRenderer } = require('electron');
 	var url = new URL(window.location.href);
@@ -148,9 +149,9 @@
     			<div class="alert alert-danger">
     				Sign in with the PxApi !
     			</div>
-    			<a href="${$('#px_redir').val()}" class="btn btn-primary d-flex justify-content-center">Log in!</a>
-				<a href="#" onclick="skip_login()" class="btn btn-primary d-flex justify-content-center">Skip Log in!</a>
-    			<a href="#" disabled="" class="btn btn-primary d-flex justify-content-center disabled">Log in with OneID! (Coming Soon)</a>
+    			<a href="${$('#px_redir').val()}" class="button btn-primary d-flex justify-content-center">Log in!</a>
+				<a href="#" onclick="skip_login()" class="button btn-primary d-flex justify-content-center">Skip Log in!</a>
+    			<a href="#" disabled="" class="button btn-primary d-flex justify-content-center disabled">Log in with OneID! (Coming Soon)</a>
     		`);
 		}else if(id == 3){
 			imagebyimage(
@@ -167,7 +168,7 @@
 				    </div>
 				</div>
 				<h5 class="card-title" id="welcome_name">Welcome</h5>
-				<a href="#" class="btn btn-primary d-flex justify-content-center" onclick="step(4)">Let's Go!</a>
+				<a href="#" class="button btn-primary d-flex justify-content-center" onclick="step(4)">Let's Go!</a>
 			`);
 		}else if(id == 4){
 			imagebyimage(
@@ -206,7 +207,7 @@
 				<h3 class="card-title">Update Available</h5>
 				<h5 class="card-title" id="waiter">Loading.....</h5>
 				<p class="text text-danger">https://xbrowse.preknowledge.repl.co/ for getting updates</p>
-				<a href="#" class="btn btn-primary d-flex justify-content-center" onclick="step(7)">Coutinue , Later</a>
+				<a href="#" class="button btn-danger d-flex justify-content-center" onclick="step(7)">Coutinue , Later</a>
 			`);
 		}else if(id ==7){
 			ipcRenderer.send('noupdate');

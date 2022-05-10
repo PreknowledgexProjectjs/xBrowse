@@ -176,7 +176,7 @@ class RenderWindow extends EventEmitter {
       'y': mainWindowState.y,
       'width': mainWindowState.width,
       'height': mainWindowState.height,
-      icon:'src/icons/icon.ico',
+      icon:'../icons/icon.ico',
       title:"xBrowse Beta",
       webPreferences: {
         contextIsolation: false,

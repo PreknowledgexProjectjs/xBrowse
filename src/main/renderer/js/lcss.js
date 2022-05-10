@@ -65,4 +65,6 @@ setInterval(() => {
 function hideAlert(id){
 	jquery('#alert-'+id).hide();
 }
+$('#lcss-version-onload').html('v0.1.3 (Beta)');
+$('#lcss-version-onload').val('v0.1.3 (Beta)');
 /* END JS*/
