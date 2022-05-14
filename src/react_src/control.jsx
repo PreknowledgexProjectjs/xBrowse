@@ -140,6 +140,19 @@ function Control() {
   const newTab = () => {
     action.sendNewTab();
   };
+
+  const closeWin = () => {
+    ipcRenderer.send('close-app');
+  };
+  const minMax = () => {
+    ipcRenderer.send('minimize-app');
+  };
+  const miniApp = () => {
+    ipcRenderer.send('mini-app');
+  }
+  const fullScreentoggle = () => {
+    ipcRenderer.send('fullScreentoggle');
+  }
   const openSettings = () => {
    
    ipcRenderer.send('open_settings');
@@ -151,7 +164,22 @@ function Control() {
 
   return (
     <div>
-      <div className="container">
+
+      <div className="container" style={{ marginTop:'0' , padding:'0px 0px' }}>
+        <span type="plus" className="button btn-danger fa fa-close" style={{ float:'right' , borderRadius:'0px' , marginTop:'0'}} onClick={closeWin}>
+           
+         </span>
+         <span type="plus" className="button btn-info fa fa-window-restore " style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} onClick={minMax}>
+       
+         </span>
+         <span type="plus" className="button btn-success fa fa-window-minimize" style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} onClick={miniApp}>
+         </span>
+         <span type="plus" className="button btn-info fa fa-expand" style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} onClick={fullScreentoggle}>
+  
+         </span>
+         <span type="plus" className="button btn-info dragg fa fa-arrows" style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} >
+           
+         </span>
         <div  className="tabs">
           <>
             {tabIDs.map(id => {
@@ -167,17 +195,18 @@ function Control() {
                   <div className="title">
                     <div className="title-content">{title}</div>
                   </div>
-                  <div className="close" onClick={e => close(e, id)}>
-                    <IconClose />
-                  </div>
+                  <span className="close fa fa-close" onClick={e => close(e, id)}></span>
                 </div>
               );
             })}
             <span type="plus" className="plusic" style={{ marginLeft: 10 }} onClick={newTab}>
               <IconPlus />
             </span>
+
+            
           </>
         </div>
+        
         <div className="bars">
           <div className="bar address-bar">
             <div className="actions">

@@ -105,6 +105,13 @@ try{
       return;
     }
 
+    ipcMain.on('close-app',(event) => {
+      app.quit();
+    })
+    ipcMain.on('max-min',(event) => {
+      app.quit();
+    })
+
     if (halfmoon == undefined) {
       global_X.set('halfmoon_is_enabled',false);
       htmlLoad = fileUrl(`${__dirname}/renderer/control.html`);
@@ -190,10 +197,16 @@ try{
     });
 
     ipcMain.on('minimize-app',(event) => {
+      browser.win.isMaximized() ? browser.win.unmaximize() : browser.win.maximize()
+    });
+
+    ipcMain.on('mini-app',(event) => {
       browser.win.isMinimized() ? browser.win.restore() : browser.win.minimize()
     });
 
-    
+    ipcMain.on('fullScreentoggle',(event) => {
+      browser.win.isFullScreen() ? browser.win.setSimpleFullScreen(false) : browser.win.setSimpleFullScreen(true)
+    });
 
     var menu = new Menu();
 

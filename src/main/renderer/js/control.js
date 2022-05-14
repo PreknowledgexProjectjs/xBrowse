@@ -174,6 +174,22 @@ function Control() {
     action.sendNewTab();
   };
 
+  const closeWin = () => {
+    ipcRenderer.send('close-app');
+  };
+
+  const minMax = () => {
+    ipcRenderer.send('minimize-app');
+  };
+
+  const miniApp = () => {
+    ipcRenderer.send('mini-app');
+  };
+
+  const fullScreentoggle = () => {
+    ipcRenderer.send('fullScreentoggle');
+  };
+
   const openSettings = () => {
     ipcRenderer.send('open_settings');
   };
@@ -183,8 +199,56 @@ function Control() {
   };
 
   return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("div", {
-    className: "container"
-  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: "container",
+    style: {
+      marginTop: '0',
+      padding: '0px 0px'
+    }
+  }, /*#__PURE__*/_react.default.createElement("span", {
+    type: "plus",
+    className: "button btn-danger fa fa-close",
+    style: {
+      float: 'right',
+      borderRadius: '0px',
+      marginTop: '0'
+    },
+    onClick: closeWin
+  }), /*#__PURE__*/_react.default.createElement("span", {
+    type: "plus",
+    className: "button btn-info fa fa-window-restore ",
+    style: {
+      float: 'right',
+      borderRadius: '0px',
+      marginTop: '0'
+    },
+    onClick: minMax
+  }), /*#__PURE__*/_react.default.createElement("span", {
+    type: "plus",
+    className: "button btn-success fa fa-window-minimize",
+    style: {
+      float: 'right',
+      borderRadius: '0px',
+      marginTop: '0'
+    },
+    onClick: miniApp
+  }), /*#__PURE__*/_react.default.createElement("span", {
+    type: "plus",
+    className: "button btn-info fa fa-expand",
+    style: {
+      float: 'right',
+      borderRadius: '0px',
+      marginTop: '0'
+    },
+    onClick: fullScreentoggle
+  }), /*#__PURE__*/_react.default.createElement("span", {
+    type: "plus",
+    className: "button btn-info dragg fa fa-arrows",
+    style: {
+      float: 'right',
+      borderRadius: '0px',
+      marginTop: '0'
+    }
+  }), /*#__PURE__*/_react.default.createElement("div", {
     className: "tabs"
   }, /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, tabIDs.map(id => {
     // eslint-disable-next-line no-shadow
@@ -211,10 +275,10 @@ function Control() {
       className: "title"
     }, /*#__PURE__*/_react.default.createElement("div", {
       className: "title-content"
-    }, title)), /*#__PURE__*/_react.default.createElement("div", {
-      className: "close",
+    }, title)), /*#__PURE__*/_react.default.createElement("span", {
+      className: "close fa fa-close",
       onClick: e => close(e, id)
-    }, /*#__PURE__*/_react.default.createElement(IconClose, null)));
+    }));
   }), /*#__PURE__*/_react.default.createElement("span", {
     type: "plus",
     className: "plusic",
