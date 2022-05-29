@@ -206,7 +206,7 @@ function Control() {
     }
   }, /*#__PURE__*/_react.default.createElement("span", {
     type: "plus",
-    className: "button btn-danger fa fa-close",
+    className: "button btn-normal-danger fa fa-close",
     style: {
       float: 'right',
       borderRadius: '0px',
@@ -215,7 +215,7 @@ function Control() {
     onClick: closeWin
   }), /*#__PURE__*/_react.default.createElement("span", {
     type: "plus",
-    className: "button btn-info fa fa-window-restore ",
+    className: "button btn-normal-info fa fa-window-restore ",
     style: {
       float: 'right',
       borderRadius: '0px',
@@ -224,7 +224,7 @@ function Control() {
     onClick: minMax
   }), /*#__PURE__*/_react.default.createElement("span", {
     type: "plus",
-    className: "button btn-success fa fa-window-minimize",
+    className: "button btn-normal-success fa fa-window-minimize",
     style: {
       float: 'right',
       borderRadius: '0px',
@@ -233,7 +233,7 @@ function Control() {
     onClick: miniApp
   }), /*#__PURE__*/_react.default.createElement("span", {
     type: "plus",
-    className: "button btn-info fa fa-expand",
+    className: "button btn-normal-info fa fa-expand",
     style: {
       float: 'right',
       borderRadius: '0px',
@@ -242,7 +242,7 @@ function Control() {
     onClick: fullScreentoggle
   }), /*#__PURE__*/_react.default.createElement("span", {
     type: "plus",
-    className: "button btn-info dragg fa fa-arrows",
+    className: "button btn-normal-info dragg fa fa-arrows",
     style: {
       float: 'right',
       borderRadius: '0px',
@@ -263,11 +263,13 @@ function Control() {
         active: id === activeID
       }),
       onClick: () => switchTab(id)
-    }, isLoading ? /*#__PURE__*/_react.default.createElement("img", {
-      src: "https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif",
-      width: "16",
-      alt: "icon"
-    }) : !!favicon && /*#__PURE__*/_react.default.createElement("img", {
+    }, isLoading ? /*#__PURE__*/_react.default.createElement("div", {
+      class: "ac-spinner"
+    }, /*#__PURE__*/_react.default.createElement("div", {
+      class: "sp-circle sp-sm"
+    }), /*#__PURE__*/_react.default.createElement("div", {
+      class: "sp-label"
+    })) : !!favicon && /*#__PURE__*/_react.default.createElement("img", {
       src: favicon,
       width: "16",
       alt: "icon"

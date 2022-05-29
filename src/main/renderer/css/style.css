@@ -93,6 +93,54 @@ body {
   color: white;
 }
 
+.container-div{
+  width: 100%;
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.ct-div{
+  display: inline-block !important;
+  float: left !important;
+}
+
+.ct-div-1{
+  display: inline-block !important;
+  width: 10%!important;
+  float: left !important;
+}
+
+.ct-div-2{
+  display: inline-block !important;
+  width: 20% !important;
+  float: left !important;
+}
+
+.ct-div-3{
+  display: inline-block !important;
+  width: 20% !important;
+  float: left !important;
+}
+
+
+.ct-div-4{
+  display: inline-block !important;
+  width: 40% !important;
+  float: left !important;
+}
+
+.ct-div-5{
+  display: inline-block;
+  width: 50% !important;
+  float: left !important;
+}
+
+.ct-div-6{
+  display: inline-block !important;
+  width: 60% !important;
+  float: left !important;
+}
 
 
 
@@ -889,6 +937,9 @@ ul {
 
 }
 
+.dark-mode .ac-spinner .sp-circle{
+  border-color: white #262522 #262522;
+}
 
 .ac-spinner .sp-label {
     font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
@@ -1095,4 +1146,44 @@ ul {
   animation-fill-mode: both;
   -webkit-animation-name: fadeOutm;
   animation-name: fadeOutm;
+}
+@media screen and (max-width: 400px) {
+  .container-div{
+    content: "";
+    display: block;
+    clear: none;
+  }
+  .ct-div{
+    display: block;
+  }
+
+  .ct-div-1{
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .ct-div-2{
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .ct-div-3{
+    display: block !important;
+    width: 100% !important;
+  }
+
+
+  .ct-div-4{
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .ct-div-5{
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .ct-div-6{
+    display: block !important;
+    width: 100% !important;
 }

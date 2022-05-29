@@ -166,18 +166,18 @@ function Control() {
     <div>
 
       <div className="container" style={{ marginTop:'0' , padding:'0px 0px' }}>
-        <span type="plus" className="button btn-danger fa fa-close" style={{ float:'right' , borderRadius:'0px' , marginTop:'0'}} onClick={closeWin}>
+        <span type="plus" className="button btn-normal-danger fa fa-close" style={{ float:'right' , borderRadius:'0px' , marginTop:'0'}} onClick={closeWin}>
            
          </span>
-         <span type="plus" className="button btn-info fa fa-window-restore " style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} onClick={minMax}>
+         <span type="plus" className="button btn-normal-info fa fa-window-restore " style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} onClick={minMax}>
        
          </span>
-         <span type="plus" className="button btn-success fa fa-window-minimize" style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} onClick={miniApp}>
+         <span type="plus" className="button btn-normal-success fa fa-window-minimize" style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} onClick={miniApp}>
          </span>
-         <span type="plus" className="button btn-info fa fa-expand" style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} onClick={fullScreentoggle}>
+         <span type="plus" className="button btn-normal-info fa fa-expand" style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} onClick={fullScreentoggle}>
   
          </span>
-         <span type="plus" className="button btn-info dragg fa fa-arrows" style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} >
+         <span type="plus" className="button btn-normal-info dragg fa fa-arrows" style={{ float:'right' , borderRadius:'0px', marginTop:'0'}} >
            
          </span>
         <div  className="tabs">
@@ -191,7 +191,10 @@ function Control() {
                   className={cx('tab', { active: id === activeID })}
                   onClick={() => switchTab(id)}
                 >
-                  {isLoading ? <img src={"https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif"} width="16" alt="icon" /> : !!favicon && <img src={favicon} width="16" alt="icon" />}
+                  {isLoading ? <div class="ac-spinner">
+                                  <div class="sp-circle sp-sm"></div>
+                                  <div class="sp-label"></div>
+                              </div> : !!favicon && <img src={favicon} width="16" alt="icon" />}
                   <div className="title">
                     <div className="title-content">{title}</div>
                   </div>
