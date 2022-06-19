@@ -41,8 +41,13 @@ ipcRenderer.on('url-enter-l', (event, url) => {
 
 ipcRenderer.on('user_get_info', (event, arg) => {
     if (!url.searchParams.get("guest")) {
-        $('#login_logo').attr('src', arg.login_logo)
-        $('.user_name').html(arg.login_name);
+        try{
+            $('#login_logo').attr('src', arg.login_logo)
+            $('.user_name').html(arg.login_name);
+        }catch(e){
+            $('#login_logo').attr('src', "../../icons/icon.png")
+            $('.user_name').html("xBrowse");
+        }
     } else {
         $('#login_logo').hide();
         $('.user_name').html("Guest");
