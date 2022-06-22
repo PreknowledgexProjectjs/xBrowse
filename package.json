@@ -1,9 +1,9 @@
 {
-  "name": "xbrowseapp",
-  "productName": "XBrowseApp",
+  "name": "xbrowse",
+  "productName": "xBrowse",
   "version": "1.0.0-pre1",
   "description": "new",
-  "author": "pxproj",
+  "author": "PreknowledgeX",
   "homepage": "https://x.preknowledge.in",
   "keywords": [
     "electron",

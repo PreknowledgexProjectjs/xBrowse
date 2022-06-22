@@ -157,6 +157,10 @@ function Control() {
    
    ipcRenderer.send('open_settings');
   };
+  const openMarket = () => {
+   
+   ipcRenderer.send('open_market');
+  };
   const switchTab = id => {
     action.sendSwitchTab(id);
   };
@@ -256,6 +260,9 @@ function Control() {
               </div>
               <span type="plus" className="plusic" style={{ marginLeft: 10 }} onClick={openSettings}>
                 <img src={"../../in_app_icons/cog.png"} width="16" alt="icon" />
+              </span>
+              <span type="plus" className="plusic" style={{ marginLeft: 10 }} onClick={openMarket}>
+                <img src={"../../in_app_icons/mk.png"} width="16" alt="icon" />
               </span>
             </div>
           </div>

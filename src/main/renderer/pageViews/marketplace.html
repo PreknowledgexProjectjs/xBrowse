@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>xBrowse</title>
+  <link rel="stylesheet" href="../css/style.css" media="all">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style type="text/css">
+    
+  </style>
+</head>
+<body>
+  <div class="body-container">  
+    <div class="sidebar">
+      <div class="side ul-primary-outlined" id="sidebar-1" >
+        <ul>
+          <li onclick="loadMK()" class="button btn-normal-info">Discover</li>
+        </ul>
+      </div>
+      <div class="r-side">
+        <div id="discover">
+          <div class="ac-spinner">
+              <div class="sp-circle sp-lg"></div>
+              <div class="sp-label">Marketplace is loading up....</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../js/jquery.js"></script>
+  <script type="text/javascript" src="../js/lcss.js"></script>
+  <script type="text/javascript">
+    loadMK();
+    function loadMK(){
+      $('#discover').html(`<div class="ac-spinner">
+              <div class="sp-circle sp-lg"></div>
+              <div class="sp-label">Marketplace is loading up....</div>
+          </div>`);
+      $.ajax({
+        url:"https://marketplace.preknowledgeservers.repl.co",
+        success:function(d) {
+          $('#discover').html(d);
+        },
+        error:function(e1,e2,e3){
+          $('#discover').html(`Failed to Load Marketplace`);
+        }
+      })
+    }
+  </script>
+</body>
+</html>

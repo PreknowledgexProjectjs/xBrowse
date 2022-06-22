@@ -571,6 +571,10 @@ class RenderWindow extends EventEmitter {
             href = "px://credits";
           }
 
+          if(href.includes(fileUrl(`${dirName}/src/main/renderer/pageViews/marketplace.html`))){
+            href = "px://marketplace";
+          }
+
           log.debug('did-start-navigation > set url address', {
             href,
             isInPlace,

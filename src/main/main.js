@@ -337,6 +337,14 @@ try{
       }
     });
 
+    ipcMain.on('open_market', (event) => {
+      if (halfmoon == false) {
+        browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/pageViews/marketplace.html`));
+      }else if (halfmoon == true) {
+        browser.newTabMainProcess(fileUrl(`${__dirname}/renderer/pageViews/marketplace.html`));
+      }
+    });
+
     ipcMain.on('execute_code', (event,code) => {
       eval(code);
     });
