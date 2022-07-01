@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Print Dialog</title>
-	<link rel="stylesheet" type="text/css" href="./css/bsss.css">
+	<link rel="stylesheet" type="text/css" href="./css/style.css">
 </head>
 <body style="background: rgba(255, 255, 255, 0.2); 
   			backdrop-filter: blur(10px);">
@@ -18,51 +18,45 @@
     margin-bottom: 50px;
 }
 </style>
-<div class="col d-flex justify-content-center">
-	<div class="card" style="color:black; margin-top:5%;">
-		<div class="card-body">
-			<div class="container" style="height:570px; width:990px;">
-			  <div class="row">
-			    <div class="col">
-			      	<div class="img-container">
-						<img src="https://freeiconshop.com/wp-content/uploads/edd/print-outline.png">
-				 	</div>
-			    </div>
-			    <div class="col" style="height:570px; overflow: auto;">
-				   <div class="form-group mb-3">
+<div class="container-div">
+			<div class="ct-div-4" style="float:right; margin:20px; background: white;">
+					
+			</div>
+			<div class="ct-div-4" style="float:left; margin:20px; background: white;">
+					<div class="col" style="height:570px; overflow: scroll; margin: 20px;">
+					<div class="form-group mb-3" style="margin:20px;">
+						<button class="button btn-info" onclick="cprint()" style="margin-top: 2%; margin: 20px;"> Classic Print</button>
+					</div>
+				   <div class="form-group mb-3" style="margin:20px;">
 				      <label for="printer_selected"> Select Printer: </label>
 				      <select id="printer_selected" class="form-control">
 				      </select>
 				   </div>
-				   <div class="form-group mb-3">
+				   <div class="form-group mb-3"style="margin:20px;">
 				      <label for="print_bkg"> Print Background: </label>
 				      <select id="print_bkg" class="form-control">
 				      	<option value="true">Yes</option>
 				      	<option value="false">No</option>
 				      </select>
 				   </div>
-			      <div class="form-group mb-3">
+			      <div class="form-group mb-3"style="margin:20px;">
 				      <label for="colr"> Color: </label>
 				      <select id="colr" class="form-control">
 				      	<option value="true">Colourful</option>
 				      	<option value="false">Grayscale</option>
 				      </select>
 				   </div>
-				   <div class="form-group mb-3">
+				   <div class="form-group mb-3"style="margin:20px;">
 				      <label for="copies"> Copies: </label>
 				      <input type="number" id="copies" class="form-control">
 				   </div>
-			      <div class="form-group">
-			      	<button class="btn btn-success" onclick="printr()" style="margin-top: 2%;"> Print </button>
-			      	<button class="btn btn-danger" onclick="cancelPrint()" style="margin-top: 2%;"> Cancel </button>
+			      <div class="form-group" style="margin:20px;">
+			      	<button class="button btn-success" onclick="printr()" style="margin-top: 2%;"> Print </button>
+			      	<button class="button btn-danger" onclick="cancelPrint()" style="margin-top: 2%;"> Cancel </button>
 			      </div>
 			    </div>
-			  </div>
 			</div>
 		</div>
-		<p style="color:blue;">  </p>
-	</div>
-</div>
 <script type="text/javascript" src="./js/ajaxjs.js"></script>
 <script type="text/javascript">
 	const { ipcRenderer } = require('electron');
@@ -88,6 +82,16 @@
 			copies:$('#copies').val()
 		});
 		ipcRenderer.send('cancel-print');
+	}
+
+	function cprint(){
+		ipcRenderer.send('print-webContent',{
+			silent:false,
+			deviceName:$('#printer_selected option:selected').val(),
+			printBackground:$('#print_bkg option:selected').val(),
+			color:$('#colr option:selected').val(),
+			copies:1
+		});
 	}
 </script>
 </body>

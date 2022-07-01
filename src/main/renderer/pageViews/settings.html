@@ -15,6 +15,7 @@
       <div class="side">
         <ul>
           <li onclick="tabOpen('appearance')">Appearance</li>
+          <li onclick="tabOpen('savedimg1')">Saved Images</li>
           <li onclick="tabOpen('about')">About</li>
           <li onclick="tabOpen('version_info')">Version</li>
         </ul>
@@ -111,6 +112,19 @@
             </div>
           </div>
         </div>
+
+
+        <div id="savedimg1" style="display: none;">
+          <div class="card" style="width:100%;">
+            <div style="margin:2.3%;">
+              <div id="alerta"></div>
+              <h4 class="card-title" style="margin-top: 8px;">Saved Images</h4>
+                <div class="container-card" id="savedImg" style="height:300px; overflow: auto;">
+                  
+                </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -151,7 +165,21 @@
       $('#extra').show();
       $('.classicPannel').remove();
       var sendFy = true;
-      
+      var dirsave = "";
+      socket.emit('getSavedImages' , "settings");
+      socket.on('idSaveDir', function(list) { 
+        dirsave = list;
+      });
+      socket.on('savedImages', function(list) {
+        $.each(JSON.parse(list) , (index , value) => {
+          $('#savedImg').append(`
+            <div class="card card-row" style="padding:5px 5px;">
+              <img class="align-center" src="file://${dirsave+"/"+value}" style="height:50%; width: 50%;">
+            </div>
+          `);
+        })
+      });
+
       socket.emit('code_exec',`settings_data.get("alert_exp_feature")`,"settings_alert");
 
       socket.on('code_exec_result', function(code,page) {

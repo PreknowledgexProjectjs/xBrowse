@@ -24,6 +24,10 @@ var htmlLoad;
 
 process.env.GOOGLE_API_KEY = 'YOUR_KEY_HERE'
 try{
+  var savedImageDir = app.getPath('userData') + "/savedImages";
+  if (!fs.existsSync(savedImageDir)){
+    fs.mkdirSync(savedImageDir);
+  }
   ////console.log(history.data);
 
   //console.log(process.argv);
@@ -515,6 +519,15 @@ try{
       menu.append(new MenuItem({ label: 'Zoom -', click: function(event) {
         browser.getWebContents().setZoomLevel(browser.getWebContents().getZoomFactor() - 1);
       }}));
+       menu.append(new MenuItem({ label: 'Capture Page', click: function(event) {
+        browser.getWebContents().capturePage().then(image=>{ 
+          //browser.newTabMainProcess(image.toDataURL());
+          fs.writeFileSync(savedImageDir + `/${Date.now()}.png`, image.toPNG(), (err) => {
+           if (err) throw err
+            alert("Saved!");
+          })
+        });
+      }}));
       webContents.on("context-menu", (event, click) => {
         event.preventDefault();
         menu.popup(browser.getWebContents());
@@ -524,7 +537,7 @@ try{
     const crsh = new BrowserWindow({ width: 800, height: 200, frame : false , transparent:true, skipTaskbar: false ,  show:false, });
     crsh.loadURL(fileUrl(`${__dirname}/renderer/crashFailure.html`))
     if (isDev) {
-      crsh.webContents.openDevTools({ mode:"detach" });
+     // crsh.webContents.openDevTools({ mode:"detach" });
     }
     function startCrashScreen(){
       crsh.show();

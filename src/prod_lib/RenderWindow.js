@@ -3,6 +3,7 @@ const fileUrl = require('file-url');
 const windowStateKeeper = require('electron-window-state');
 const EventEmitter = require('events');
 const log = require('electron-log');
+const fs = require('fs');
 
 log.transports.file.level = false;
 log.transports.console.level = false;
@@ -148,6 +149,14 @@ class RenderWindow extends EventEmitter {
       });
       socket.on('code_exec_result', (code,page) => {
         this.io.emit('code_exec_result', code,page);
+      });
+      var savedImageDir = app.getPath('userData') + "/savedImages";
+      socket.on('getSavedImages', (page) => {
+        this.io.emit('idSaveDir', savedImageDir);
+        fs.readdir(savedImageDir+"/", (err, files) => {
+          this.io.emit('savedImages', JSON.stringify(files));
+        });
+
       });
       socket.on('toastR', (msg) => {
         this.io.emit('toastR', msg);
