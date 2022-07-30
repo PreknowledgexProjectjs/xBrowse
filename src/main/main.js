@@ -1,5 +1,5 @@
 console.log("Loading src.main.mainjs Please wait .........");
-const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow, dialog } = require('electron');
+const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow, dialog , protocol , session } = require('electron');
 //Expirmental Reuqires
 //Expirmental requires ends :D
 const { exec } = require('child_process');
@@ -136,6 +136,9 @@ try{
       guest_win = false;
     }
 
+    const partition = 'persist:xbrapi';
+    const ses = session.fromPartition(partition);
+
     browser = new RenderWindow({
       controlHeight: 109,
       controlPanel: htmlLoad,
@@ -145,6 +148,7 @@ try{
       debug: isdebug, // will open controlPanel's devtools,
       guest: guest_win,
       dirname: __dirname+"/../../",
+      partition : partition,
     });
 
     setBrowser = browser;
@@ -481,45 +485,49 @@ try{
 
     app.on("web-contents-created", (...[/** Event **/,webContents]) => {
       menu.clear();
-
-      menu.append(new MenuItem({ label: 'Copy Text!', click: function(event) {
+      var x = 0;
+      var y = 0;
+      menu.append(new MenuItem({ label: '📄 Copy Text!', click: function(event) {
         browser.getWebContents().copy();
       }}));
-      menu.append(new MenuItem({ label: 'Cut Text!', click: function(event) {
+      menu.append(new MenuItem({ label: '✂ Cut Text!', click: function(event) {
         browser.getWebContents().cut();
       }}));
-      menu.append(new MenuItem({ label: 'Paste Text!', click: function(event) {
+      menu.append(new MenuItem({ label: '📋 Paste Text!', click: function(event) {
         browser.getWebContents().paste();
       }}));
       
-      menu.append(new MenuItem({ label: 'Select All', click: function(event) {
+      menu.append(new MenuItem({ label: '∀ Select All', click: function(event) {
         browser.getWebContents().selectAll();
       }}));
       menu.append(new MenuItem({ type: 'separator' }));
-      menu.append(new MenuItem({ label: 'Print', click: function(event) {
+      menu.append(new MenuItem({ label: '🖶 Print', click: function(event) {
         printDialog.show();
       }}));
       menu.append(new MenuItem({ type: 'separator' }));
-      menu.append(new MenuItem({ label: 'Reload', click: function(event) {
+      menu.append(new MenuItem({ label: '🗘 Reload', click: function(event) {
         browser.getWebContents().reload();
       }}));
-      menu.append(new MenuItem({ label: 'Mute', click: function(event) {
+      menu.append(new MenuItem({ label: '🔇 Mute', click: function(event) {
         browser.getWebContents().setAudioMuted(true);
       }}));
-      menu.append(new MenuItem({ label: 'UnMute', click: function(event) {
+      menu.append(new MenuItem({ label: '🔇 UnMute', click: function(event) {
         browser.getWebContents().setAudioMuted(false);
       }}));
-      menu.append(new MenuItem({ label: 'Inspect Element', click: function(event) {
+      menu.append(new MenuItem({ label: '🖉 Inspect Element', click: function(event) {
         browser.toggleDevTools();
       } }));
       menu.append(new MenuItem({ type: 'separator' }));
-      menu.append(new MenuItem({ label: 'Zoom +', click: function(event) {
+      menu.append(new MenuItem({ label: '🔍 Zoom +', click: function(event) {
         browser.getWebContents().setZoomLevel(browser.getWebContents().getZoomFactor() + 1);
       }}));
-      menu.append(new MenuItem({ label: 'Zoom -', click: function(event) {
+      menu.append(new MenuItem({ label: '🔍 Zoom -', click: function(event) {
         browser.getWebContents().setZoomLevel(browser.getWebContents().getZoomFactor() - 1);
       }}));
-       menu.append(new MenuItem({ label: 'Capture Page', click: function(event) {
+      menu.append(new MenuItem({ label: '📄 Copy Image', click: function(event) {
+        browser.getWebContents().copyImageAt(x , y);
+      }}));
+       menu.append(new MenuItem({ label: '🗔 Capture Page', click: function(event) {
         browser.getWebContents().capturePage().then(image=>{ 
           //browser.newTabMainProcess(image.toDataURL());
           fs.writeFileSync(savedImageDir + `/${Date.now()}.png`, image.toPNG(), (err) => {
@@ -530,6 +538,8 @@ try{
       }}));
       webContents.on("context-menu", (event, click) => {
         event.preventDefault();
+        x = click.x;
+        y = click.y;
         menu.popup(browser.getWebContents());
       }, false);
 

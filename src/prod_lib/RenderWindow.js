@@ -86,6 +86,7 @@ class RenderWindow extends EventEmitter {
 
     this.dataSetup = require('data-store')({ path: process.cwd() + '/dataSetup.json' });
     this.history = require('data-store')({ path: app.getPath('userData') + '/history.json' });
+    var dirName = __dirname.replace("prod_lib","main/../../");
 
     const settings_data = require('data-store')({ path: app.getPath('userData') + '/settings.json' });
 
@@ -484,7 +485,7 @@ class RenderWindow extends EventEmitter {
       }
     };
 
-    var dirName = this.options.dirname;
+    
 
     webContents.on('new-window', this.options.onNewWindow || onNewWindow);
 
@@ -531,6 +532,8 @@ class RenderWindow extends EventEmitter {
           //   href2 = "px://"+href2.replace(".html","");
           //   href = href2.replace(`?port=${this.port_to_open}&lang=${this.stringify_lang}`,"");
           // }
+
+          var dirName = __dirname.replace("prod_lib","main/../../");
 
           if(href.includes(fileUrl(`${dirName}/src/main/renderer/settings.html`))){
             href = "px://settings";
@@ -662,7 +665,7 @@ class RenderWindow extends EventEmitter {
         this.setTabConfig(id, { isLoading: false });
       })
       .on('did-finish-load',() => {
-        if (url.includes(fileUrl(`${dirName}/src/main/renderer/`))) {
+        if (url.includes(fileUrl(`${__dirname.replace("prod_lib","main/../../")}/src/main/renderer/`))) {
           webContents.insertCSS(`
             * {
               font-family: "Segoe UI"; 
@@ -739,13 +742,26 @@ class RenderWindow extends EventEmitter {
    *
    * @fires RenderWindow#new-tab
    */
+   c
   newTab(url, appendTo, references) {
+    //Main for Tabs
+    var nodeIntegration = false;
+    var contextIsolation = true;
+    if(url.includes(fileUrl(`${__dirname.replace("prod_lib","main/../../")}/src/main/renderer/`))){
+      nodeIntegration = true;
+      contextIsolation = false;
+    }else{
+      nodeIntegration = false;
+      contextIsolation = true;
+    }
+    console.log(url);
+    console.log(__dirname.replace("prod_lib","main/../../"));
     const view = new BrowserView({
       webPreferences: {
         // Set sandbox to support window.opener
         // See: https://github.com/electron/electron/issues/1865#issuecomment-249989894
-        sandbox: true,
-        ...(references || this.options.viewReferences)
+        nodeIntegration: nodeIntegration,
+        contextIsolation: contextIsolation
       }
     });
 
