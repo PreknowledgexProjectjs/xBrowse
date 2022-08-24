@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<title id="new_tab">New Tab</title>
 	<link rel="stylesheet" href="./css/new-tab.css">
+	<link rel="stylesheet" type="text/css" href="./pageViews/css/style.css">
 
 	<style type="text/css">
 		body{
@@ -52,10 +53,6 @@
 			<img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" height="96" width="96">
 			<h4>Gmail</h4>
 		</li>
-		<li onclick="window.location = 'https://discordapp.com'">
-			<img src="https://logodownload.org/wp-content/uploads/2017/11/discord-logo-0.png" height="96" width="96">
-			<h4>Discord</h4>
-		</li>
 		<li onclick="window.location = 'https://weather.com'">
 			<img src="https://s.w-x.co/240x180_twc_default.png" height="96" width="96">
 			<h4>The Weather Channel</h4>
@@ -69,15 +66,32 @@
 			<img src="https://abs.twimg.com/favicons/favicon.ico" height="96" width="96">
 			<h4>Twitter</h4>
 		</li>
+
+		<li></li>
 		
 	</ul>
 
-	<div id="bottom">
+	<br/>
+
+	<div class="card" style="background: transparent;">
+		<h3 id="sitestxt">Recent Blogs from Preknowledge</h3>
+		<div class="card-body" style="background: transparent;">
+			<div id="posts" class="container-card align-center">
+				<div class="ac-spinner">
+				    <div class="sp-circle sp-md"></div>
+				    <div class="sp-label">Loading Posts..</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="bottom" style="position:fixed;">
 		<p>© 2022 Preknowledge.in | New Tab Page by PwL</p>
 	</div>
 	<script src="./js/new-tab.js"></script>
 	<script type="text/javascript" src="./js/ajaxjs.js"></script>
 	<script type="text/javascript">
+		const $ = require('jquery');
 		let url = new URL(window.location.href)
 		  let params = new URLSearchParams(url.search);
 		  var lang = JSON.parse(url.searchParams.get("lang"));
@@ -85,6 +99,26 @@
 		    $(`#${index}`).html(value);
 		    $(`#${index}`).attr('value',index);
 		});
+		$.ajax({
+			url:"http://preknowledge.in/wp-json/wp/v2/posts",
+			method:"GET",
+			success:function(data){
+				$('#posts').html('');
+				$.each(data , (index,data) => {
+					$('#posts').append(`
+						<div class="card-row row-3" onclick="window.location.href='${data.link}';">
+							<div class="card">
+								<img src="${data.x_featured_media_original}" />
+								<h3>${data.title.rendered}</h3>
+								<div class="card-body">
+									${data.excerpt.rendered}
+								</div>
+							</div>
+						</div>
+					`);
+				});
+			}
+		})
 	</script>
 </body>
 </html>

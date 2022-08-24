@@ -742,19 +742,23 @@ class RenderWindow extends EventEmitter {
    *
    * @fires RenderWindow#new-tab
    */
-   c
   newTab(url, appendTo, references) {
     //Main for Tabs
     var nodeIntegration = false;
     var contextIsolation = true;
-    if(url.includes(fileUrl(`${__dirname.replace("prod_lib","main/../../")}/src/main/renderer/`))){
+    if(url !== undefined){
+      if(url.includes(fileUrl(`${__dirname.replace("prod_lib","main/../../")}/src/main/renderer/`))){
+        nodeIntegration = true;
+        contextIsolation = false;
+      }else{
+        nodeIntegration = false;
+        contextIsolation = true;
+      }
+    }else{
       nodeIntegration = true;
       contextIsolation = false;
-    }else{
-      nodeIntegration = false;
-      contextIsolation = true;
     }
-    console.log(url);
+    console.log("URI::::"+url);
     console.log(__dirname.replace("prod_lib","main/../../"));
     const view = new BrowserView({
       webPreferences: {

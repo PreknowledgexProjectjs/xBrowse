@@ -2,6 +2,10 @@ console.log("Loading src.main.mainjs Please wait .........");
 const { app, ipcMain , ipcRenderer, Menu, MenuItem, BrowserWindow, dialog , protocol , session } = require('electron');
 //Expirmental Reuqires
 //Expirmental requires ends :D
+
+//http://preknowledge.in/wp-json/wp/v2/posts
+//API TO GET POSTS
+
 const { exec } = require('child_process');
 const net = require('net');
 const fileUrl = require('file-url');
