@@ -54,6 +54,8 @@
 	const x = require('../../prod_lib/x.js');
 	const $ = require('jquery');
 
+	skip_login();
+
 	ipcRenderer.send('get-signin-url');
 	ipcRenderer.on('signin-url', (event, arg) => {
 	  $('#px_redir').val(arg);

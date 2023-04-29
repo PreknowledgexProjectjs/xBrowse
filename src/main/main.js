@@ -44,7 +44,6 @@ try{
   var port_in = 35565;
 
   app.commandLine.appendSwitch('enable-transparent-visuals');
-  app.commandLine.appendSwitch('disable-gpu');
 
   function createWindow() {
     var isdebug = true;
@@ -230,30 +229,23 @@ try{
 
     if (settings_data.get('user_info.login_id') !== undefined) {
       ipcMain.on('user_info', (event) => {
-        require('axios').get(`https://x.preknowledge.in/Api/get_user_data/${settings_data.get('user_info.login_id')}`)
-        .then(function (response) {
-          settings_data.set('user_info',response.data)
-          event.reply('user_get_info',response.data);
-        })
-        .catch(function (error) {
-           event.reply('user_get_info',settings_data.get('user_info.login_image'));
-        });
+        event.reply('user_get_info',settings_data.get('user_info.login_image'));
       });
 
       global_X_acc.set('account_id',settings_data.get('user_info.login_id'));
       global_X_acc.set('account_name',settings_data.get('user_info.login_name'));
       global_X_acc.set('account_ico',settings_data.get('user_info.login_image'));
 
-      require('axios').get(`https://x.preknowledge.in/Api/get_user_data/${settings_data.get('user_info.login_id')}`)
-      .then(function (response) {
-        if (response.data.login_status == 0) {
-          browser.win.hide();
-          startWelcomeScreen(`?error=true&message=Your account is either banned or disabled`);
-        }else if (response.data.login_insiderUpdates == 0) {
-          browser.win.hide();
-          startWelcomeScreen(`?error=true&message=You are not allowed for Beta Updates <br> Please go to : https://x.preknowledge.in/Profile and edit profile and allow insider updates`);
-        }
-      });
+      // require('axios').get(`https://x.preknowledge.in/Api/get_user_data/${settings_data.get('user_info.login_id')}`)
+      // .then(function (response) {
+      //   if (response.data.login_status == 0) {
+      //     browser.win.hide();
+      //     startWelcomeScreen(`?error=true&message=Your account is either banned or disabled`);
+      //   }else if (response.data.login_insiderUpdates == 0) {
+      //     browser.win.hide();
+      //     startWelcomeScreen(`?error=true&message=You are not allowed for Beta Updates <br> Please go to : https://x.preknowledge.in/Profile and edit profile and allow insider updates`);
+      //   }
+      // });
     }else{
       ipcMain.on('user_info', (event) => { 
         event.reply('user_get_info',JSON.stringify({id:1}));

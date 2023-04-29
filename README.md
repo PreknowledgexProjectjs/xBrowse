@@ -1,5 +1,4 @@
-# xBrowse Upcoming
-## https://xbrowse.preknowledge.repl.co/ For Downloading Beta Release
+# xBrowse
 
 ### If you want early build or want to compile here are the steps
 

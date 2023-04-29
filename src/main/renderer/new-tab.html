@@ -73,17 +73,6 @@
 
 	<br/>
 
-	<div class="card" style="background: transparent;">
-		<h3 id="sitestxt">Recent Blogs from Preknowledge</h3>
-		<div class="card-body" style="background: transparent;">
-			<div id="posts" class="container-card align-center">
-				<div class="ac-spinner">
-				    <div class="sp-circle sp-md"></div>
-				    <div class="sp-label">Loading Posts..</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<div id="bottom" style="position:fixed;">
 		<p>© 2022 Preknowledge.in | New Tab Page by PwL</p>
@@ -99,26 +88,6 @@
 		    $(`#${index}`).html(value);
 		    $(`#${index}`).attr('value',index);
 		});
-		$.ajax({
-			url:"http://preknowledge.in/wp-json/wp/v2/posts",
-			method:"GET",
-			success:function(data){
-				$('#posts').html('');
-				$.each(data , (index,data) => {
-					$('#posts').append(`
-						<div class="card-row row-3" onclick="window.location.href='${data.link}';">
-							<div class="card">
-								<img src="${data.x_featured_media_original}" />
-								<h3>${data.title.rendered}</h3>
-								<div class="card-body">
-									${data.excerpt.rendered}
-								</div>
-							</div>
-						</div>
-					`);
-				});
-			}
-		})
 	</script>
 </body>
 </html>

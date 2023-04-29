@@ -129,9 +129,9 @@ class RenderWindow extends EventEmitter {
 
     this.io.on("connection", (socket) => {
       this.isAppStarted = true;
-      console.log("connection found@!");
+      //console.log("connection found@!");
       socket.on('disconnect', () => {
-        console.log('Window Closed Code 1');
+        //console.log('Window Closed Code 1');
       });
       socket.on('code_exec', (code,page) => {
         var codeEval = eval(code);
@@ -373,7 +373,6 @@ class RenderWindow extends EventEmitter {
         height: contentHeight - controlBounds.height
       });
 
-      console.log(`x:0 y:${controlBounds.y + controlBounds.height + 10}`);
     }
   }
 
@@ -490,7 +489,6 @@ class RenderWindow extends EventEmitter {
     webContents.on('new-window', this.options.onNewWindow || onNewWindow);
 
     ipcMain.on('print-webContent', (event,device) => {
-      console.log("print request > "+this.currentView.id);
       this.printView(this.currentView.id,device);
     });
     
@@ -602,15 +600,15 @@ class RenderWindow extends EventEmitter {
           let seconds = date_ob.getSeconds();
 
           if (href.includes(fileUrl(`${dirName}/src/main/renderer/`))) {
-            console.log("Not allowed to store in history");
+            //console.log("Not allowed to store in history");
           }else if(href == ''){
-            console.log("Can't store in history");
+            //console.log("Can't store in history");
           }else if (href.includes('px://')) {
-            console.log("Not allowed to store in history");
+            //console.log("Not allowed to store in history");
           }else if (href.includes(fileUrl(`${dirName}/src/main/renderer/pageViews`))) {
-            console.log("Not allowed to store in history(Beta)");
+            //console.log("Not allowed to store in history(Beta)");
           }else if(this.options.guest){
-            console.log("Not allowed to store history");
+            //console.log("Not allowed to store history");
           }else{
             this.history.set(`${Date.now()}`,{
               url:href,
@@ -709,7 +707,7 @@ class RenderWindow extends EventEmitter {
       .executeJavaScript('localStorage.user_agent', true)
       .then(result => {
         if (result == undefined) {
-          webContents.setUserAgent(`Mozilla/5.0 (Windows NT ${require('os').release()}; Win64; ${require('os').arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.56 Safari/537.36`)
+          webContents.setUserAgent(`Mozilla/5.0 (Windows NT ${require('os').release()}; Win64; ${require('os').arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.5249.199 Electron/21.4.4 Safari/537.36`)
         }else{
           webContents.setUserAgent(result);
         }
@@ -758,8 +756,6 @@ class RenderWindow extends EventEmitter {
       nodeIntegration = true;
       contextIsolation = false;
     }
-    console.log("URI::::"+url);
-    console.log(__dirname.replace("prod_lib","main/../../"));
     const view = new BrowserView({
       webPreferences: {
         // Set sandbox to support window.opener
@@ -833,7 +829,7 @@ class RenderWindow extends EventEmitter {
     if (view) {
       view.webContents.print(data
       ,function(callback){
-        console.log(callback);
+        //console.log(callback);
       });
       log.debug(`${viewId} Printing`);
     }
