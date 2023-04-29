@@ -5,8 +5,8 @@ const EventEmitter = require('events');
 const log = require('electron-log');
 const fs = require('fs');
 
-log.transports.file.level = false;
-log.transports.console.level = false;
+log.transports.file.level = true;
+log.transports.console.level = true;
 
 var PublicWin;
 var pathWin = app.getPath('userData')+"/../.gloablx";
@@ -188,7 +188,7 @@ class RenderWindow extends EventEmitter {
       'height': mainWindowState.height,
       icon:'../icons/icon.ico',
       title:"xBrowse Pre-Release Technical Build",
-      transparent:true,
+      transparent:false,
       frame:false,
       webPreferences: {
         contextIsolation: false,
@@ -484,7 +484,7 @@ class RenderWindow extends EventEmitter {
       }
     };
 
-    
+    var dirName = __dirname.replace("prod_lib","main/../../");
 
     webContents.on('new-window', this.options.onNewWindow || onNewWindow);
 
@@ -530,8 +530,6 @@ class RenderWindow extends EventEmitter {
           //   href2 = "px://"+href2.replace(".html","");
           //   href = href2.replace(`?port=${this.port_to_open}&lang=${this.stringify_lang}`,"");
           // }
-
-          var dirName = __dirname.replace("prod_lib","main/../../");
 
           if(href.includes(fileUrl(`${dirName}/src/main/renderer/settings.html`))){
             href = "px://settings";
@@ -707,7 +705,7 @@ class RenderWindow extends EventEmitter {
       .executeJavaScript('localStorage.user_agent', true)
       .then(result => {
         if (result == undefined) {
-          webContents.setUserAgent(`Mozilla/5.0 (Windows NT ${require('os').release()}; Win64; ${require('os').arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.5249.199 Electron/21.4.4 Safari/537.36`)
+          //webContents.setUserAgent(`Mozilla/5.0 (Windows NT ${require('os').release()}; Win64; ${require('os').arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.5249.199 Electron/21.4.4 Safari/537.36`)
         }else{
           webContents.setUserAgent(result);
         }
@@ -724,7 +722,10 @@ class RenderWindow extends EventEmitter {
 
   setCurrentView(viewId) {
     if (!viewId) return;
-    this.win.removeBrowserView(this.currentView);
+    if(viewId == null) return;
+    if(this.currentView !== null){
+      this.win.removeBrowserView(this.currentView);
+    }
     this.win.addBrowserView(this.views[viewId]);
     this.currentViewId = viewId;
     const view = this.views[this.currentView.id];

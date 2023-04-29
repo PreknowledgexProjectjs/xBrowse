@@ -2,7 +2,7 @@ const presets = [
   [
     '@babel/preset-env',
     {
-      targets: { electron: 16 }
+      targets: { electron: 21 }
     }
   ],
   ['@babel/preset-react']
